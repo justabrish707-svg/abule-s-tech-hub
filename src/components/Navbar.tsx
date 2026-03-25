@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Terminal, LogIn, LogOut } from "lucide-react";
+import { Menu, X, Terminal, LogIn, LogOut, UserCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
@@ -52,9 +52,13 @@ const Navbar = () => {
           </ul>
           {user ? (
             <div className="flex items-center gap-2 ml-2">
-              <span className="text-xs text-muted-foreground px-2">
+              <Link
+                to="/profile"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+              >
+                <UserCircle className="h-3.5 w-3.5" />
                 {profile?.username || user.email}
-              </span>
+              </Link>
               <button
                 onClick={handleSignOut}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"

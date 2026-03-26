@@ -53,6 +53,13 @@ const Navbar = () => {
           {user ? (
             <div className="flex items-center gap-2 ml-2">
               <Link
+                to="/admin"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+              >
+                <Settings className="h-3.5 w-3.5" />
+                Admin
+              </Link>
+              <Link
                 to="/profile"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
               >

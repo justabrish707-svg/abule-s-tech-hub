@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Terminal, LogIn, LogOut, UserCircle } from "lucide-react";
+import { Menu, X, Terminal, LogIn, LogOut, UserCircle, Settings } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
@@ -52,6 +52,13 @@ const Navbar = () => {
           </ul>
           {user ? (
             <div className="flex items-center gap-2 ml-2">
+              <Link
+                to="/admin"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+              >
+                <Settings className="h-3.5 w-3.5" />
+                Admin
+              </Link>
               <Link
                 to="/profile"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
@@ -107,12 +114,21 @@ const Navbar = () => {
             ))}
             <li className="pt-2 border-t border-border/50">
               {user ? (
-                <button
-                  onClick={() => { handleSignOut(); setOpen(false); }}
-                  className="flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors w-full"
-                >
-                  <LogOut className="h-4 w-4" /> Sign Out
-                </button>
+                <div className="space-y-1">
+                  <Link
+                    to="/admin"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                  >
+                    <Settings className="h-4 w-4" /> Admin
+                  </Link>
+                  <button
+                    onClick={() => { handleSignOut(); setOpen(false); }}
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors w-full"
+                  >
+                    <LogOut className="h-4 w-4" /> Sign Out
+                  </button>
+                </div>
               ) : (
                 <Link
                   to="/auth"

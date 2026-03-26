@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Clock, Calendar } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
-import { blogPosts } from "@/data/blogPosts";
+import { useBlogPost } from "@/hooks/useBlogPosts";
 
 const renderContent = (content: string) => {
   const lines = content.split("\n");
@@ -72,7 +72,22 @@ const renderInline = (text: string) => {
 
 const BlogPost = () => {
   const { id } = useParams();
-  const post = blogPosts.find((p) => p.id === id);
+  const { data: post, isLoading } = useBlogPost(id);
+
+  if (isLoading) {
+    return (
+      <main className="pt-16">
+        <div className="container max-w-2xl py-16">
+          <div className="animate-pulse space-y-4">
+            <div className="h-4 w-24 bg-secondary rounded" />
+            <div className="h-8 w-3/4 bg-secondary rounded" />
+            <div className="h-4 w-1/2 bg-secondary rounded" />
+            <div className="h-64 bg-secondary rounded mt-8" />
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   if (!post) {
     return (
@@ -106,7 +121,7 @@ const BlogPost = () => {
           <div className="flex items-center gap-4 text-sm text-muted-foreground mb-10">
             <span>by Abule</span>
             <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{new Date(post.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
-            <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{post.readTime}</span>
+            <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{post.read_time}</span>
           </div>
         </ScrollReveal>
 

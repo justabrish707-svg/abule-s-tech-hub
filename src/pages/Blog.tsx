@@ -2,11 +2,13 @@ import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
 import BlogCard from "@/components/BlogCard";
 import ScrollReveal from "@/components/ScrollReveal";
-import { blogPosts, categories } from "@/data/blogPosts";
+import { useBlogPosts, useBlogCategories } from "@/hooks/useBlogPosts";
 
 const Blog = () => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const { data: blogPosts = [], isLoading } = useBlogPosts();
+  const { data: categories = ["All"] } = useBlogCategories();
 
   const filtered = useMemo(() => {
     return blogPosts.filter((p) => {
@@ -17,7 +19,7 @@ const Blog = () => {
         p.excerpt.toLowerCase().includes(search.toLowerCase());
       return matchCat && matchSearch;
     });
-  }, [search, category]);
+  }, [search, category, blogPosts]);
 
   return (
     <main className="pt-16">
@@ -59,7 +61,13 @@ const Blog = () => {
           </div>
         </ScrollReveal>
 
-        {filtered.length === 0 ? (
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="rounded-lg border border-border/50 bg-card p-5 animate-pulse h-40" />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
           <ScrollReveal>
             <div className="text-center py-16 text-muted-foreground">
               <p className="mb-1">No posts found.</p>

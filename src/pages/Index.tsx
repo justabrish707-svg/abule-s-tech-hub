@@ -13,7 +13,10 @@ const skills = [
   { icon: Code2, label: "Programming", desc: "C++, Python, TypeScript" },
 ];
 
-const Index = () => (
+const Index = () => {
+  const { data: blogPosts = [] } = useBlogPosts();
+
+  return (
   <main className="pt-16">
     {/* Hero */}
     <section className="min-h-[85vh] flex items-center">

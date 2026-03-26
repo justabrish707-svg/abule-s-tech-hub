@@ -4,7 +4,7 @@ import TypingEffect from "@/components/TypingEffect";
 import BlogCard from "@/components/BlogCard";
 import ProjectCard from "@/components/ProjectCard";
 import ScrollReveal from "@/components/ScrollReveal";
-import { blogPosts } from "@/data/blogPosts";
+import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { projects } from "@/data/projects";
 
 const skills = [

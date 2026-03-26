@@ -13,7 +13,7 @@ const BlogCard = ({ post }: { post: BlogPost }) => (
       </span>
       <span className="flex items-center gap-1">
         <Clock className="h-3 w-3" />
-        {post.readTime}
+        {post.read_time}
       </span>
       <span>·</span>
       <span>{new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>

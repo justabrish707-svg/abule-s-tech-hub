@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Terminal, LogIn, LogOut, UserCircle } from "lucide-react";
+import { Menu, X, Terminal, LogIn, LogOut, UserCircle, Settings } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [

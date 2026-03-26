@@ -114,12 +114,21 @@ const Navbar = () => {
             ))}
             <li className="pt-2 border-t border-border/50">
               {user ? (
-                <button
-                  onClick={() => { handleSignOut(); setOpen(false); }}
-                  className="flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors w-full"
-                >
-                  <LogOut className="h-4 w-4" /> Sign Out
-                </button>
+                <div className="space-y-1">
+                  <Link
+                    to="/admin"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                  >
+                    <Settings className="h-4 w-4" /> Admin
+                  </Link>
+                  <button
+                    onClick={() => { handleSignOut(); setOpen(false); }}
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors w-full"
+                  >
+                    <LogOut className="h-4 w-4" /> Sign Out
+                  </button>
+                </div>
               ) : (
                 <Link
                   to="/auth"

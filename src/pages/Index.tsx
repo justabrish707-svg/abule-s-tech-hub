@@ -4,7 +4,7 @@ import TypingEffect from "@/components/TypingEffect";
 import BlogCard from "@/components/BlogCard";
 import ProjectCard from "@/components/ProjectCard";
 import ScrollReveal from "@/components/ScrollReveal";
-import { blogPosts } from "@/data/blogPosts";
+import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { projects } from "@/data/projects";
 
 const skills = [
@@ -13,7 +13,10 @@ const skills = [
   { icon: Code2, label: "Programming", desc: "C++, Python, TypeScript" },
 ];
 
-const Index = () => (
+const Index = () => {
+  const { data: blogPosts = [] } = useBlogPosts();
+
+  return (
   <main className="pt-16">
     {/* Hero */}
     <section className="min-h-[85vh] flex items-center">
@@ -127,6 +130,7 @@ const Index = () => (
       </div>
     </section>
   </main>
-);
+  );
+};
 
 export default Index;

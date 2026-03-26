@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Clock } from "lucide-react";
-import type { BlogPost } from "@/data/blogPosts";
+import type { BlogPost } from "@/hooks/useBlogPosts";
 
 const BlogCard = ({ post }: { post: BlogPost }) => (
   <Link
@@ -13,7 +13,7 @@ const BlogCard = ({ post }: { post: BlogPost }) => (
       </span>
       <span className="flex items-center gap-1">
         <Clock className="h-3 w-3" />
-        {post.readTime}
+        {post.read_time}
       </span>
       <span>·</span>
       <span>{new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>

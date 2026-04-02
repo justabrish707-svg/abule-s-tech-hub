@@ -213,7 +213,7 @@ const Admin = () => {
               <div className="flex items-center justify-between px-6 py-4 bg-secondary/30 border-b border-border/50">
                 <div className="flex items-center gap-3">
                   <div className="h-3 w-3 rounded-full bg-destructive/60" />
-                  <div className="h-3 w-3 rounded-full bg-yellow-500/60" />
+                  <div className="h-3 w-3 rounded-full bg-muted-foreground/40" />
                   <div className="h-3 w-3 rounded-full bg-primary/60" />
                   <span className="ml-2 text-sm font-medium text-foreground">
                     {isNew ? "New Post" : "Editing"}

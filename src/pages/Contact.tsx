@@ -2,23 +2,25 @@ import { useState } from "react";
 import { Send, Github, Linkedin, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 import ScrollReveal from "@/components/ScrollReveal";
+import { useSendContactMessage } from "@/hooks/useContactMessages";
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [sending, setSending] = useState(false);
+  const sendMessage = useSendContactMessage();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
       toast.error("Please fill in all fields.");
       return;
     }
-    setSending(true);
-    setTimeout(() => {
-      setSending(false);
+    try {
+      await sendMessage.mutateAsync(form);
       setForm({ name: "", email: "", message: "" });
       toast.success("Message sent! I'll get back to you soon.");
-    }, 1200);
+    } catch {
+      toast.error("Failed to send message. Please try again.");
+    }
   };
 
   return (
@@ -62,10 +64,10 @@ const Contact = () => {
             </div>
             <button
               type="submit"
-              disabled={sending}
+              disabled={sendMessage.isPending}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-primary text-primary-foreground font-medium text-sm transition-all duration-150 hover:brightness-110 active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {sending ? "Sending..." : "Send Message"}
+              {sendMessage.isPending ? "Sending..." : "Send Message"}
               <Send className="h-4 w-4" />
             </button>
           </form>

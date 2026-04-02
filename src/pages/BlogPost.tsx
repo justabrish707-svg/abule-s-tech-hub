@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Clock, Calendar } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import { useBlogPost } from "@/hooks/useBlogPosts";
+import CommentSection from "@/components/CommentSection";
 
 const renderContent = (content: string) => {
   const lines = content.split("\n");

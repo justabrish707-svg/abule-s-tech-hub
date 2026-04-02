@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Pencil, Trash2, Save, X, Eye } from "lucide-react";
+import { Plus, Pencil, Trash2, Save, X, Eye, FileText, Clock, Tag, Type, AlignLeft, Sparkles } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBlogPosts, type BlogPost } from "@/hooks/useBlogPosts";
 import { supabase } from "@/integrations/supabase/client";
@@ -100,7 +100,7 @@ const Admin = () => {
           author_id: user.id,
         });
         if (error) throw error;
-        toast.success("Post created!");
+        toast.success("Post published successfully! 🎉");
       } else {
         const { error } = await supabase
           .from("blog_posts")
@@ -114,7 +114,7 @@ const Admin = () => {
           })
           .eq("id", editing.id);
         if (error) throw error;
-        toast.success("Post updated!");
+        toast.success("Post updated successfully!");
       }
 
       queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
@@ -144,168 +144,257 @@ const Admin = () => {
   };
 
   return (
-    <main className="pt-16">
-      <div className="container max-w-4xl py-16">
-        <ScrollReveal>
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold">Admin</h1>
-              <p className="text-muted-foreground text-sm mt-1">Manage your blog posts</p>
+    <main className="pt-16 min-h-screen">
+      {/* Hero header */}
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/3" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="container max-w-5xl py-12 relative">
+          <ScrollReveal>
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Sparkles className="h-4 w-4 text-primary" />
+                  </div>
+                  <span className="text-xs font-medium text-primary tracking-wider uppercase">Dashboard</span>
+                </div>
+                <h1 className="text-4xl font-bold tracking-tight">
+                  Manage Posts
+                </h1>
+                <p className="text-muted-foreground">
+                  Create, edit, and manage your blog content
+                </p>
+              </div>
+              {!editing && (
+                <button
+                  onClick={handleNew}
+                  className="group relative inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] transition-all duration-200 active:scale-95"
+                >
+                  <Plus className="h-4 w-4" />
+                  New Post
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
+                </button>
+              )}
             </div>
-            {!editing && (
-              <button
-                onClick={handleNew}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:brightness-110 transition-all active:scale-95"
-              >
-                <Plus className="h-4 w-4" /> New Post
-              </button>
-            )}
-          </div>
-        </ScrollReveal>
 
+            {/* Stats bar */}
+            {!editing && (
+              <div className="flex items-center gap-6 mt-8 pt-6 border-t border-border/30">
+                <div className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
+                    <span className="font-semibold text-foreground">{posts.length}</span> posts
+                  </span>
+                </div>
+                {categoryOptions.map((cat) => {
+                  const count = posts.filter((p) => p.category === cat).length;
+                  if (count === 0) return null;
+                  return (
+                    <div key={cat} className="flex items-center gap-1.5">
+                      <div className="h-2 w-2 rounded-full bg-primary/60" />
+                      <span className="text-sm text-muted-foreground">
+                        {count} {cat}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </ScrollReveal>
+        </div>
+      </div>
+
+      <div className="container max-w-5xl py-8">
         {editing ? (
           <ScrollReveal>
-            <div className="rounded-lg border border-border bg-card p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold">
-                  {isNew ? "Create Post" : "Edit Post"}
-                </h2>
+            <div className="rounded-2xl border border-border/50 bg-card overflow-hidden shadow-xl shadow-black/10">
+              {/* Editor toolbar */}
+              <div className="flex items-center justify-between px-6 py-4 bg-secondary/30 border-b border-border/50">
+                <div className="flex items-center gap-3">
+                  <div className="h-3 w-3 rounded-full bg-destructive/60" />
+                  <div className="h-3 w-3 rounded-full bg-yellow-500/60" />
+                  <div className="h-3 w-3 rounded-full bg-primary/60" />
+                  <span className="ml-2 text-sm font-medium text-foreground">
+                    {isNew ? "New Post" : "Editing"}
+                  </span>
+                </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setPreview(!preview)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                    className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                      preview
+                        ? "bg-primary/10 text-primary border border-primary/20"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary border border-transparent"
+                    }`}
                   >
-                    <Eye className="h-3.5 w-3.5" /> {preview ? "Edit" : "Preview"}
+                    <Eye className="h-3.5 w-3.5" /> {preview ? "Editing" : "Preview"}
                   </button>
                   <button
                     onClick={handleCancel}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                   >
                     <X className="h-3.5 w-3.5" /> Cancel
                   </button>
                 </div>
               </div>
 
-              {preview ? (
-                <div className="space-y-4">
-                  <div className="px-2.5 py-1 inline-block rounded-full bg-primary/10 text-primary text-xs font-medium">
-                    {editing.category}
-                  </div>
-                  <h3 className="text-2xl font-bold">{editing.title || "Untitled"}</h3>
-                  <p className="text-muted-foreground">{editing.excerpt}</p>
-                  <div className="pt-4 border-t border-border/50 whitespace-pre-wrap text-sm text-muted-foreground leading-relaxed">
-                    {editing.content}
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1.5">Title</label>
-                    <input
-                      type="text"
-                      value={editing.title}
-                      onChange={(e) => setEditing({ ...editing, title: e.target.value })}
-                      placeholder="Post title..."
-                      className="w-full px-3 py-2 rounded-md border border-border bg-secondary text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-1.5">Excerpt</label>
-                    <input
-                      type="text"
-                      value={editing.excerpt}
-                      onChange={(e) => setEditing({ ...editing, excerpt: e.target.value })}
-                      placeholder="Short description..."
-                      className="w-full px-3 py-2 rounded-md border border-border bg-secondary text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-1.5">Category</label>
-                      <select
-                        value={editing.category}
-                        onChange={(e) => setEditing({ ...editing, category: e.target.value })}
-                        className="w-full px-3 py-2 rounded-md border border-border bg-secondary text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-                      >
-                        {categoryOptions.map((cat) => (
-                          <option key={cat} value={cat}>{cat}</option>
-                        ))}
-                      </select>
+              <div className="p-6">
+                {preview ? (
+                  <div className="space-y-4 animate-fade-in">
+                    <div className="px-3 py-1 inline-block rounded-full bg-primary/10 text-primary text-xs font-medium">
+                      {editing.category}
                     </div>
+                    <h3 className="text-3xl font-bold tracking-tight">{editing.title || "Untitled"}</h3>
+                    <p className="text-muted-foreground text-lg leading-relaxed">{editing.excerpt}</p>
+                    <div className="pt-6 border-t border-border/30 whitespace-pre-wrap text-sm text-muted-foreground leading-relaxed font-mono">
+                      {editing.content}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-5 animate-fade-in">
                     <div>
-                      <label className="block text-sm font-medium mb-1.5">Read Time</label>
+                      <label className="flex items-center gap-2 text-sm font-medium mb-2 text-muted-foreground">
+                        <Type className="h-3.5 w-3.5" /> Title
+                      </label>
                       <input
                         type="text"
-                        value={editing.read_time}
-                        onChange={(e) => setEditing({ ...editing, read_time: e.target.value })}
-                        placeholder="5 min"
-                        className="w-full px-3 py-2 rounded-md border border-border bg-secondary text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                        value={editing.title}
+                        onChange={(e) => setEditing({ ...editing, title: e.target.value })}
+                        placeholder="An eye-catching title..."
+                        className="w-full px-4 py-3 rounded-xl border border-border/50 bg-secondary/50 text-lg font-semibold text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all"
                       />
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-1.5">
-                      Content <span className="text-muted-foreground font-normal">(Markdown supported: ## headings, **bold**, `code`, ```code blocks```)</span>
-                    </label>
-                    <textarea
-                      value={editing.content}
-                      onChange={(e) => setEditing({ ...editing, content: e.target.value })}
-                      placeholder="Write your post content here..."
-                      rows={16}
-                      className="w-full px-3 py-2 rounded-md border border-border bg-secondary text-sm text-foreground font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-y"
-                    />
-                  </div>
+                    <div>
+                      <label className="flex items-center gap-2 text-sm font-medium mb-2 text-muted-foreground">
+                        <AlignLeft className="h-3.5 w-3.5" /> Excerpt
+                      </label>
+                      <input
+                        type="text"
+                        value={editing.excerpt}
+                        onChange={(e) => setEditing({ ...editing, excerpt: e.target.value })}
+                        placeholder="A brief summary of your post..."
+                        className="w-full px-4 py-2.5 rounded-xl border border-border/50 bg-secondary/50 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all"
+                      />
+                    </div>
 
-                  <div className="flex justify-end pt-2">
-                    <button
-                      onClick={handleSave}
-                      disabled={saving}
-                      className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:brightness-110 transition-all active:scale-95 disabled:opacity-50"
-                    >
-                      <Save className="h-4 w-4" />
-                      {saving ? "Saving..." : isNew ? "Publish" : "Update"}
-                    </button>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="flex items-center gap-2 text-sm font-medium mb-2 text-muted-foreground">
+                          <Tag className="h-3.5 w-3.5" /> Category
+                        </label>
+                        <select
+                          value={editing.category}
+                          onChange={(e) => setEditing({ ...editing, category: e.target.value })}
+                          className="w-full px-4 py-2.5 rounded-xl border border-border/50 bg-secondary/50 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all appearance-none cursor-pointer"
+                        >
+                          {categoryOptions.map((cat) => (
+                            <option key={cat} value={cat}>{cat}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="flex items-center gap-2 text-sm font-medium mb-2 text-muted-foreground">
+                          <Clock className="h-3.5 w-3.5" /> Read Time
+                        </label>
+                        <input
+                          type="text"
+                          value={editing.read_time}
+                          onChange={(e) => setEditing({ ...editing, read_time: e.target.value })}
+                          placeholder="5 min"
+                          className="w-full px-4 py-2.5 rounded-xl border border-border/50 bg-secondary/50 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="flex items-center gap-2 text-sm font-medium mb-2 text-muted-foreground">
+                        <FileText className="h-3.5 w-3.5" /> Content
+                        <span className="text-xs text-muted-foreground/60 font-normal ml-1">
+                          Markdown: ## headings, **bold**, `code`, ```blocks```
+                        </span>
+                      </label>
+                      <textarea
+                        value={editing.content}
+                        onChange={(e) => setEditing({ ...editing, content: e.target.value })}
+                        placeholder="Write your post content here..."
+                        rows={18}
+                        className="w-full px-4 py-3 rounded-xl border border-border/50 bg-secondary/50 text-sm text-foreground font-mono leading-relaxed placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all resize-y"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between pt-4 border-t border-border/30">
+                      <p className="text-xs text-muted-foreground/60">
+                        {editing.content.length} characters · ~{Math.ceil(editing.content.split(/\s+/).filter(Boolean).length / 200)} min read
+                      </p>
+                      <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
+                      >
+                        <Save className="h-4 w-4" />
+                        {saving ? "Saving..." : isNew ? "Publish Post" : "Update Post"}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </ScrollReveal>
         ) : isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-20 rounded-lg border border-border/50 bg-card animate-pulse" />
+              <div key={i} className="h-24 rounded-xl border border-border/30 bg-card animate-pulse" />
             ))}
           </div>
         ) : posts.length === 0 ? (
           <ScrollReveal>
-            <div className="text-center py-16 text-muted-foreground">
-              <p>No posts yet. Create your first one!</p>
+            <div className="text-center py-24">
+              <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 mb-4">
+                <FileText className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold mb-1">No posts yet</h3>
+              <p className="text-muted-foreground text-sm mb-6">Create your first post to get started</p>
+              <button
+                onClick={handleNew}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all"
+              >
+                <Plus className="h-4 w-4" /> Create Post
+              </button>
             </div>
           </ScrollReveal>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {posts.map((post, i) => (
               <ScrollReveal key={post.id} delay={i * 40}>
-                <div className="flex items-center justify-between rounded-lg border border-border/50 bg-card p-4 hover:border-border transition-colors">
-                  <div className="flex-1 min-w-0 mr-4">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-medium">
+                <div className="group flex items-center justify-between rounded-xl border border-border/30 bg-card p-5 hover:border-primary/20 hover:bg-card/80 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+                  <div className="flex-1 min-w-0 mr-6">
+                    <div className="flex items-center gap-2.5 mb-2">
+                      <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wide">
                         {post.category}
                       </span>
+                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {post.read_time}
+                      </span>
                       <span className="text-xs text-muted-foreground">
-                        {new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        {new Date(post.date).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
                       </span>
                     </div>
-                    <h3 className="text-sm font-semibold truncate">{post.title}</h3>
-                    <p className="text-xs text-muted-foreground truncate">{post.excerpt}</p>
+                    <h3 className="text-base font-semibold truncate group-hover:text-primary transition-colors">
+                      {post.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground truncate mt-0.5">{post.excerpt}</p>
                   </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
+                  <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <button
                       onClick={() => handleEdit(post)}
-                      className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                      className="p-2.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
                       title="Edit"
                     >
                       <Pencil className="h-4 w-4" />
@@ -313,7 +402,7 @@ const Admin = () => {
                     <button
                       onClick={() => handleDelete(post.id)}
                       disabled={deleting === post.id}
-                      className="p-2 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
+                      className="p-2.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all disabled:opacity-50"
                       title="Delete"
                     >
                       <Trash2 className="h-4 w-4" />

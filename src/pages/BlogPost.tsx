@@ -128,6 +128,8 @@ const BlogPost = () => {
         <ScrollReveal delay={160}>
           <div className="prose-custom">{renderContent(post.content)}</div>
         </ScrollReveal>
+
+        <CommentSection postId={post.id} />
       </article>
     </main>
   );

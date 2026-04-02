@@ -1,10 +1,11 @@
 import { Terminal, Github, Linkedin, Send } from "lucide-react";
 import { Link } from "react-router-dom";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 const Footer = () => (
   <footer className="border-t border-border/50 bg-card/50">
     <div className="container py-12">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
           <Link to="/" className="flex items-center gap-2 mb-3">
             <Terminal className="h-4 w-4 text-primary" />
@@ -46,6 +47,9 @@ const Footer = () => (
               </a>
             ))}
           </div>
+        </div>
+        <div>
+          <NewsletterSignup />
         </div>
       </div>
       <div className="mt-10 pt-6 border-t border-border/50 text-center text-xs text-muted-foreground">

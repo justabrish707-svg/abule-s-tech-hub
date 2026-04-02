@@ -1,14 +1,23 @@
 import { ExternalLink, Github, Clock, CheckCircle2, Lightbulb } from "lucide-react";
-import type { Project } from "@/data/projects";
 
-const statusConfig = {
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  tech: string[];
+  github?: string | null;
+  demo?: string | null;
+  status: string;
+}
+
+const statusConfig: Record<string, { icon: typeof CheckCircle2; label: string; className: string }> = {
   completed: { icon: CheckCircle2, label: "Completed", className: "text-primary" },
   "in-progress": { icon: Clock, label: "In Progress", className: "text-amber-400" },
   planned: { icon: Lightbulb, label: "Planned", className: "text-muted-foreground" },
 };
 
 const ProjectCard = ({ project }: { project: Project }) => {
-  const status = statusConfig[project.status];
+  const status = statusConfig[project.status] || statusConfig.planned;
   const StatusIcon = status.icon;
 
   return (
@@ -34,7 +43,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
       <h3 className="text-base font-semibold mb-2">{project.title}</h3>
       <p className="text-sm text-muted-foreground mb-4 line-clamp-3">{project.description}</p>
       <div className="flex flex-wrap gap-1.5">
-        {project.tech.map((t) => (
+        {(project.tech || []).map((t) => (
           <span key={t} className="px-2 py-0.5 rounded-full bg-secondary text-xs font-medium text-secondary-foreground">
             {t}
           </span>

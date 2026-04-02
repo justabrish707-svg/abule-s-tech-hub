@@ -21,11 +21,23 @@ export const useComments = (postId: string) => {
     queryFn: async (): Promise<Comment[]> => {
       const { data, error } = await supabase
         .from("comments")
-        .select("*, profiles(username, avatar_url)")
+        .select("*")
         .eq("post_id", postId)
         .order("created_at", { ascending: true });
       if (error) throw error;
-      return data as Comment[];
+      
+      // Fetch profiles for comment authors
+      const userIds = [...new Set(data.map((c) => c.user_id))];
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, username, avatar_url")
+        .in("id", userIds);
+      
+      const profileMap = new Map(profiles?.map((p) => [p.id, p]) || []);
+      return data.map((c) => ({
+        ...c,
+        profiles: profileMap.get(c.user_id) || undefined,
+      })) as Comment[];
     },
     enabled: !!postId,
   });

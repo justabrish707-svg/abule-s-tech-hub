@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Mail, Lock, User, LogIn, UserPlus } from "lucide-react";
+import { Mail, Lock, User, LogIn, UserPlus, Terminal } from "lucide-react";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -48,32 +48,36 @@ const Auth = () => {
   };
 
   return (
-    <main className="pt-16 min-h-screen flex items-center justify-center">
-      <div className="w-full max-w-md mx-auto px-4">
-        <div className="rounded-xl border border-border bg-card p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold mb-1">
-              {isLogin ? "Welcome back" : "Create account"}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              {isLogin
-                ? "Sign in to your account"
-                : "Join Abule Tech community"}
-            </p>
-          </div>
+    <main className="pt-16 min-h-screen flex items-center justify-center relative">
+      <div className="absolute inset-0 hero-gradient" />
+      <div className="absolute inset-0 grid-pattern opacity-15" />
 
+      <div className="w-full max-w-md mx-auto px-4 relative">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-primary/10 mb-4">
+            <Terminal className="h-7 w-7 text-primary" />
+          </div>
+          <h1 className="text-2xl font-bold mb-1">
+            {isLogin ? "Welcome back" : "Join Abule Tech"}
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            {isLogin ? "Sign in to your account" : "Create your account to get started"}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-border/50 bg-card/80 backdrop-blur-sm p-8 shadow-xl shadow-black/10">
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div>
-                <label className="block text-sm font-medium mb-1.5">Username</label>
+                <label className="block text-sm font-medium mb-2">Username</label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Your username"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-md border border-border bg-secondary text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-shadow"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-secondary/50 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all"
                     maxLength={50}
                   />
                 </div>
@@ -81,24 +85,24 @@ const Auth = () => {
             )}
 
             <div>
-              <label className="block text-sm font-medium mb-1.5">Email</label>
+              <label className="block text-sm font-medium mb-2">Email</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="w-full pl-10 pr-4 py-2.5 rounded-md border border-border bg-secondary text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-shadow"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-secondary/50 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1.5">Password</label>
+              <label className="block text-sm font-medium mb-2">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <input
                   type="password"
                   value={password}
@@ -106,7 +110,7 @@ const Auth = () => {
                   placeholder="••••••••"
                   required
                   minLength={6}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-md border border-border bg-secondary text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-shadow"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-secondary/50 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all"
                 />
               </div>
             </div>
@@ -114,7 +118,7 @@ const Auth = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md bg-primary text-primary-foreground font-medium text-sm transition-all duration-150 hover:brightness-110 active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.01] transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 "Please wait..."

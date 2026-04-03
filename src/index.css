@@ -49,6 +49,7 @@
     --surface-elevated: 220 16% 12%;
     --glow-primary: 142 60% 50%;
     --text-dim: 215 12% 45%;
+    --primary-glow: 155 70% 60%;
   }
 }
 
@@ -66,12 +67,56 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-emerald-300;
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
   }
   .glow {
-    box-shadow: 0 0 20px hsl(var(--glow-primary) / 0.15);
+    box-shadow: 0 0 30px hsl(var(--glow-primary) / 0.2), 0 0 60px hsl(var(--glow-primary) / 0.05);
   }
   .glow-sm {
-    box-shadow: 0 0 10px hsl(var(--glow-primary) / 0.1);
+    box-shadow: 0 0 15px hsl(var(--glow-primary) / 0.12);
   }
+  .glow-border {
+    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.15), 0 0 20px hsl(var(--glow-primary) / 0.08);
+  }
+  .glass {
+    backdrop-filter: blur(16px) saturate(180%);
+    background: hsl(var(--background) / 0.7);
+  }
+  .glass-card {
+    backdrop-filter: blur(12px);
+    background: hsl(var(--card) / 0.6);
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+  .hero-gradient {
+    background: radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--primary) / 0.12), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 50%, hsl(var(--primary-glow) / 0.06), transparent);
+  }
+  .grid-pattern {
+    background-image: linear-gradient(hsl(var(--border) / 0.3) 1px, transparent 1px),
+                       linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .card-hover {
+    @apply transition-all duration-300;
+  }
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px hsl(var(--primary) / 0.08), 0 0 0 1px hsl(var(--primary) / 0.12);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px hsl(var(--primary) / 0.15); }
+  50% { box-shadow: 0 0 40px hsl(var(--primary) / 0.25); }
 }

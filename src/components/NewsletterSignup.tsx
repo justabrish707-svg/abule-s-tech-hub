@@ -1,63 +1,68 @@
 import { useState } from "react";
-import { Mail, ArrowRight, Check } from "lucide-react";
-import { useSubscribe } from "@/hooks/useNewsletter";
+import { Mail, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
+import { useSubscribe } from "@/hooks/useNewsletter";
 
-const NewsletterSignup = () => {
+const NewsletterSignup = ({ compact = false }: { compact?: boolean }) => {
   const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
   const subscribe = useSubscribe();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
     try {
-      await subscribe.mutateAsync(email);
-      setSubscribed(true);
+      await subscribe.mutateAsync(email.trim());
       setEmail("");
       toast.success("You're subscribed! 🎉");
-    } catch (err: any) {
-      toast.error(err.message || "Failed to subscribe");
+    } catch {
+      toast.error("Could not subscribe. Try again.");
     }
   };
 
-  if (subscribed) {
+  if (compact) {
     return (
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-6 text-center">
-        <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 mb-3">
-          <Check className="h-5 w-5 text-primary" />
-        </div>
-        <p className="text-sm font-semibold">You're on the list!</p>
-        <p className="text-xs text-muted-foreground mt-1">Thanks for subscribing.</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="rounded-xl border border-border/50 bg-card p-6">
-      <div className="flex items-center gap-2 mb-2">
-        <Mail className="h-4 w-4 text-primary" />
-        <h3 className="text-sm font-semibold">Newsletter</h3>
-      </div>
-      <p className="text-xs text-muted-foreground mb-4">
-        Get new posts delivered to your inbox. No spam, unsubscribe anytime.
-      </p>
       <form onSubmit={handleSubmit} className="flex gap-2">
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="your@email.com"
-          required
-          maxLength={255}
-          className="flex-1 px-3 py-2 rounded-lg border border-border/50 bg-secondary/50 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+          placeholder="Your email"
+          className="flex-1 px-3 py-2 rounded-lg border border-border bg-secondary/50 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
         />
         <button
           type="submit"
           disabled={subscribe.isPending}
-          className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:brightness-110 disabled:opacity-50 transition-all"
+          className="h-9 w-9 rounded-lg bg-primary text-primary-foreground flex items-center justify-center hover:scale-105 transition-all active:scale-95 disabled:opacity-50"
         >
-          {subscribe.isPending ? "..." : <ArrowRight className="h-4 w-4" />}
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </form>
+    );
+  }
+
+  return (
+    <div className="text-center">
+      <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-primary/10 mb-5">
+        <Mail className="h-7 w-7 text-primary" />
+      </div>
+      <h3 className="text-2xl font-bold mb-2">Stay in the Loop</h3>
+      <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
+        Get notified about new posts, tutorials, and project updates. No spam, ever.
+      </p>
+      <form onSubmit={handleSubmit} className="flex gap-2 max-w-sm mx-auto">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@example.com"
+          className="flex-1 px-4 py-3 rounded-xl border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all"
+        />
+        <button
+          type="submit"
+          disabled={subscribe.isPending}
+          className="px-5 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] transition-all active:scale-95 disabled:opacity-50"
+        >
+          {subscribe.isPending ? "..." : "Subscribe"}
         </button>
       </form>
     </div>

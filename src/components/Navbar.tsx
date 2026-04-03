@@ -23,23 +23,25 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/30 glass">
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <Terminal className="h-5 w-5 text-primary transition-transform duration-200 group-hover:rotate-6" />
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
+            <Terminal className="h-4 w-4 text-primary transition-transform duration-200 group-hover:rotate-6" />
+          </div>
           <span className="text-lg font-bold tracking-tight">
-            abule<span className="text-primary">.tech</span>
+            abule<span className="text-gradient">.tech</span>
           </span>
         </Link>
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-1">
-          <ul className="flex items-center gap-1">
+          <ul className="flex items-center gap-0.5">
             {navLinks.map((link) => (
               <li key={link.to}>
                 <Link
                   to={link.to}
-                  className={`px-3.5 py-2 text-sm font-medium rounded-md transition-colors duration-150 ${
+                  className={`px-3.5 py-2 text-sm font-medium rounded-lg transition-all duration-150 ${
                     location.pathname === link.to
                       ? "text-primary bg-primary/10"
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary"
@@ -51,24 +53,24 @@ const Navbar = () => {
             ))}
           </ul>
           {user ? (
-            <div className="flex items-center gap-2 ml-2">
+            <div className="flex items-center gap-1.5 ml-3 pl-3 border-l border-border/30">
               <Link
                 to="/admin"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
               >
                 <Settings className="h-3.5 w-3.5" />
                 Admin
               </Link>
               <Link
                 to="/profile"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
               >
                 <UserCircle className="h-3.5 w-3.5" />
                 {profile?.username || user.email}
               </Link>
               <button
                 onClick={handleSignOut}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-border/50 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
               >
                 <LogOut className="h-3.5 w-3.5" /> Sign Out
               </button>
@@ -76,7 +78,7 @@ const Navbar = () => {
           ) : (
             <Link
               to="/auth"
-              className="inline-flex items-center gap-1.5 ml-2 px-3.5 py-1.5 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:brightness-110 transition-all"
+              className="inline-flex items-center gap-1.5 ml-3 px-4 py-2 rounded-xl text-xs font-semibold bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 hover:scale-[1.02] transition-all"
             >
               <LogIn className="h-3.5 w-3.5" /> Sign In
             </Link>
@@ -86,7 +88,7 @@ const Navbar = () => {
         {/* Mobile toggle */}
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors active:scale-95"
+          className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors active:scale-95"
           aria-label="Toggle menu"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -95,14 +97,14 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl animate-fade-in">
+        <div className="md:hidden border-t border-border/30 glass animate-fade-in">
           <ul className="container py-4 space-y-1">
             {navLinks.map((link) => (
               <li key={link.to}>
                 <Link
                   to={link.to}
                   onClick={() => setOpen(false)}
-                  className={`block px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
+                  className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     location.pathname === link.to
                       ? "text-primary bg-primary/10"
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary"
@@ -112,19 +114,19 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
-            <li className="pt-2 border-t border-border/50">
+            <li className="pt-2 border-t border-border/30">
               {user ? (
                 <div className="space-y-1">
                   <Link
                     to="/admin"
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                   >
                     <Settings className="h-4 w-4" /> Admin
                   </Link>
                   <button
                     onClick={() => { handleSignOut(); setOpen(false); }}
-                    className="flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors w-full"
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors w-full"
                   >
                     <LogOut className="h-4 w-4" /> Sign Out
                   </button>
@@ -133,7 +135,7 @@ const Navbar = () => {
                 <Link
                   to="/auth"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium text-primary"
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-primary"
                 >
                   <LogIn className="h-4 w-4" /> Sign In
                 </Link>

@@ -1,11 +1,19 @@
-import { GraduationCap, Target, Code2, Shield, Globe, MapPin, Calendar, Coffee } from "lucide-react";
+import { GraduationCap, Target, Code2, Shield, Globe, MapPin, Calendar, Coffee, Send, Phone, Mail } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
+import aboutBg from "@/assets/about-bg.jpg";
+
+const socials = [
+  { icon: Send, href: "https://t.me/abule_48", label: "Telegram" },
+  { icon: Phone, href: "https://wa.me/2510954897133", label: "WhatsApp" },
+  { icon: Mail, href: "mailto:abuleman1221@gmail.com", label: "Email" },
+];
 
 const About = () => (
   <main className="pt-16">
     {/* Hero header */}
     <section className="relative overflow-hidden border-b border-border/30">
-      <div className="absolute inset-0 hero-gradient" />
+      <img src={aboutBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-30" loading="lazy" width={1920} height={768} />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/40" />
       <div className="absolute inset-0 grid-pattern opacity-20" />
       <div className="container max-w-3xl py-20 relative">
         <ScrollReveal>
@@ -17,6 +25,13 @@ const About = () => (
             <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> Arba Minch, Ethiopia</span>
             <span className="inline-flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5" /> CS Student</span>
             <span className="inline-flex items-center gap-1.5"><Coffee className="h-3.5 w-3.5" /> Powered by caffeine</span>
+          </div>
+          <div className="flex gap-2 mt-5">
+            {socials.map(({ icon: Icon, href, label }) => (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="h-9 w-9 rounded-lg bg-secondary/80 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all active:scale-95" aria-label={label}>
+                <Icon className="h-4 w-4" />
+              </a>
+            ))}
           </div>
         </ScrollReveal>
       </div>

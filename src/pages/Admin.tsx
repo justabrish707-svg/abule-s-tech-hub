@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Plus, Pencil, Trash2, Save, X, Eye, FileText, Clock, Tag, Type, AlignLeft, Sparkles,
-  Mail, MessageSquare, Users, FolderOpen, BarChart3, CheckCircle, Circle
+  Mail, MessageSquare, Users, FolderOpen, BarChart3, CheckCircle, Circle, ImagePlus
 } from "lucide-react";
+import CoverImageUpload from "@/components/CoverImageUpload";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBlogPosts, type BlogPost } from "@/hooks/useBlogPosts";
 import { useContactMessages, type ContactMessage } from "@/hooks/useContactMessages";

@@ -304,6 +304,11 @@ const Admin = () => {
                             <input type="text" value={editingPost.read_time} onChange={(e) => setEditingPost({ ...editingPost, read_time: e.target.value })} placeholder="5 min" className="w-full px-4 py-2.5 rounded-xl border border-border/50 bg-secondary/50 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all" />
                           </div>
                         </div>
+                        <CoverImageUpload
+                          value={editingPost.cover_image}
+                          onChange={(url) => setEditingPost({ ...editingPost, cover_image: url })}
+                          postId={editingPost.id || undefined}
+                        />
                         <div>
                           <label className="flex items-center gap-2 text-sm font-medium mb-2 text-muted-foreground"><FileText className="h-3.5 w-3.5" /> Content <span className="text-xs text-muted-foreground/60 font-normal ml-1">Markdown supported</span></label>
                           <textarea value={editingPost.content} onChange={(e) => setEditingPost({ ...editingPost, content: e.target.value })} placeholder="Write your post content here..." rows={18} className="w-full px-4 py-3 rounded-xl border border-border/50 bg-secondary/50 text-sm text-foreground font-mono leading-relaxed placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-y" />

@@ -76,7 +76,7 @@ const Admin = () => {
     setSaving(true);
     try {
       if (isNewPost) {
-        const { error } = await supabase.from("blog_posts").insert({ id: generateSlug(editingPost.title), title: editingPost.title.trim(), excerpt: editingPost.excerpt.trim(), content: editingPost.content.trim(), category: editingPost.category, read_time: editingPost.read_time, author_id: user.id });
+        const { error } = await supabase.from("blog_posts").insert({ id: generateSlug(editingPost.title), title: editingPost.title.trim(), excerpt: editingPost.excerpt.trim(), content: editingPost.content.trim(), category: editingPost.category, read_time: editingPost.read_time, author_id: user.id, cover_image: editingPost.cover_image });
         if (error) throw error;
         toast.success("Post published! 🎉");
       } else {

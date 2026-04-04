@@ -38,7 +38,7 @@ interface ProjectForm {
   display_order: number;
 }
 
-const emptyPostForm: PostForm = { id: "", title: "", excerpt: "", content: "", category: "Programming", read_time: "5 min" };
+const emptyPostForm: PostForm = { id: "", title: "", excerpt: "", content: "", category: "Programming", read_time: "5 min", cover_image: null };
 const emptyProjectForm: ProjectForm = { title: "", description: "", tech: "", github: "", demo: "", status: "planned", display_order: 0 };
 const categoryOptions = ["Programming", "Web Dev", "Cybersecurity"];
 

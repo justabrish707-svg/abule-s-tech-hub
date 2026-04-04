@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import CoverImageUpload from "@/components/CoverImageUpload";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useBlogPosts, type BlogPost } from "@/hooks/useBlogPosts";
 import { useContactMessages, type ContactMessage } from "@/hooks/useContactMessages";
 import { useSubscribers, type Subscriber } from "@/hooks/useNewsletter";

@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Plus, Pencil, Trash2, Save, X, Eye, FileText, Clock, Tag, Type, AlignLeft, Sparkles,
-  Mail, MessageSquare, Users, FolderOpen, BarChart3, CheckCircle, Circle
+  Mail, MessageSquare, Users, FolderOpen, BarChart3, CheckCircle, Circle, ImagePlus
 } from "lucide-react";
+import CoverImageUpload from "@/components/CoverImageUpload";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBlogPosts, type BlogPost } from "@/hooks/useBlogPosts";
 import { useContactMessages, type ContactMessage } from "@/hooks/useContactMessages";
@@ -23,6 +24,7 @@ interface PostForm {
   content: string;
   category: string;
   read_time: string;
+  cover_image: string | null;
 }
 
 interface ProjectForm {
@@ -36,7 +38,7 @@ interface ProjectForm {
   display_order: number;
 }
 
-const emptyPostForm: PostForm = { id: "", title: "", excerpt: "", content: "", category: "Programming", read_time: "5 min" };
+const emptyPostForm: PostForm = { id: "", title: "", excerpt: "", content: "", category: "Programming", read_time: "5 min", cover_image: null };
 const emptyProjectForm: ProjectForm = { title: "", description: "", tech: "", github: "", demo: "", status: "planned", display_order: 0 };
 const categoryOptions = ["Programming", "Web Dev", "Cybersecurity"];
 
@@ -66,7 +68,7 @@ const Admin = () => {
 
   // Post handlers
   const handleNewPost = () => { setEditingPost({ ...emptyPostForm }); setIsNewPost(true); setPreview(false); setTab("posts"); };
-  const handleEditPost = (p: BlogPost) => { setEditingPost({ id: p.id, title: p.title, excerpt: p.excerpt, content: p.content, category: p.category, read_time: p.read_time }); setIsNewPost(false); setPreview(false); };
+  const handleEditPost = (p: BlogPost) => { setEditingPost({ id: p.id, title: p.title, excerpt: p.excerpt, content: p.content, category: p.category, read_time: p.read_time, cover_image: p.cover_image || null }); setIsNewPost(false); setPreview(false); };
   const handleCancelPost = () => { setEditingPost(null); setIsNewPost(false); setPreview(false); };
 
   const handleSavePost = async () => {
@@ -74,11 +76,11 @@ const Admin = () => {
     setSaving(true);
     try {
       if (isNewPost) {
-        const { error } = await supabase.from("blog_posts").insert({ id: generateSlug(editingPost.title), title: editingPost.title.trim(), excerpt: editingPost.excerpt.trim(), content: editingPost.content.trim(), category: editingPost.category, read_time: editingPost.read_time, author_id: user.id });
+        const { error } = await supabase.from("blog_posts").insert({ id: generateSlug(editingPost.title), title: editingPost.title.trim(), excerpt: editingPost.excerpt.trim(), content: editingPost.content.trim(), category: editingPost.category, read_time: editingPost.read_time, author_id: user.id, cover_image: editingPost.cover_image });
         if (error) throw error;
         toast.success("Post published! 🎉");
       } else {
-        const { error } = await supabase.from("blog_posts").update({ title: editingPost.title.trim(), excerpt: editingPost.excerpt.trim(), content: editingPost.content.trim(), category: editingPost.category, read_time: editingPost.read_time, updated_at: new Date().toISOString() }).eq("id", editingPost.id);
+        const { error } = await supabase.from("blog_posts").update({ title: editingPost.title.trim(), excerpt: editingPost.excerpt.trim(), content: editingPost.content.trim(), category: editingPost.category, read_time: editingPost.read_time, cover_image: editingPost.cover_image, updated_at: new Date().toISOString() }).eq("id", editingPost.id);
         if (error) throw error;
         toast.success("Post updated!");
       }
@@ -302,6 +304,11 @@ const Admin = () => {
                             <input type="text" value={editingPost.read_time} onChange={(e) => setEditingPost({ ...editingPost, read_time: e.target.value })} placeholder="5 min" className="w-full px-4 py-2.5 rounded-xl border border-border/50 bg-secondary/50 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all" />
                           </div>
                         </div>
+                        <CoverImageUpload
+                          value={editingPost.cover_image}
+                          onChange={(url) => setEditingPost({ ...editingPost, cover_image: url })}
+                          postId={editingPost.id || undefined}
+                        />
                         <div>
                           <label className="flex items-center gap-2 text-sm font-medium mb-2 text-muted-foreground"><FileText className="h-3.5 w-3.5" /> Content <span className="text-xs text-muted-foreground/60 font-normal ml-1">Markdown supported</span></label>
                           <textarea value={editingPost.content} onChange={(e) => setEditingPost({ ...editingPost, content: e.target.value })} placeholder="Write your post content here..." rows={18} className="w-full px-4 py-3 rounded-xl border border-border/50 bg-secondary/50 text-sm text-foreground font-mono leading-relaxed placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-y" />

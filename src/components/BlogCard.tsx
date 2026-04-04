@@ -5,10 +5,21 @@ import type { BlogPost } from "@/hooks/useBlogPosts";
 const BlogCard = ({ post }: { post: BlogPost }) => (
   <Link
     to={`/blog/${post.id}`}
-    className="group block rounded-2xl border border-border/50 bg-card p-6 card-hover active:scale-[0.98] overflow-hidden relative"
+    className="group block rounded-2xl border border-border/50 bg-card card-hover active:scale-[0.98] overflow-hidden relative"
   >
     <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-    <div className="relative">
+    {post.cover_image && (
+      <div className="relative h-44 overflow-hidden">
+        <img
+          src={post.cover_image}
+          alt={post.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
+      </div>
+    )}
+    <div className="relative p-6">
       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
         <span className="px-2.5 py-1 rounded-full bg-primary/10 text-primary font-semibold">
           {post.category}

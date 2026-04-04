@@ -119,11 +119,17 @@ const BlogPost = () => {
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4" style={{ textWrap: "balance" }}>
             {post.title}
           </h1>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground mb-10">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
             <span>by Abule</span>
             <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{new Date(post.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
             <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{post.read_time}</span>
           </div>
+          {post.cover_image && (
+            <div className="rounded-2xl overflow-hidden border border-border/50 mb-10">
+              <img src={post.cover_image} alt={post.title} className="w-full h-64 sm:h-80 object-cover" />
+            </div>
+          )}
+          {!post.cover_image && <div className="mb-10" />}
         </ScrollReveal>
 
         <ScrollReveal delay={160}>

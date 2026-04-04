@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Shield, Globe, Code2, Zap, BookOpen, Rocket } from "lucide-react";
+import { ArrowRight, Shield, Globe, Code2, Zap, BookOpen, Rocket, Send, Phone, Mail } from "lucide-react";
 import TypingEffect from "@/components/TypingEffect";
 import BlogCard from "@/components/BlogCard";
 import ProjectCard from "@/components/ProjectCard";
@@ -7,6 +7,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useProjects } from "@/hooks/useProjects";
+import heroBg from "@/assets/hero-bg.jpg";
 
 const skills = [
   { icon: Globe, label: "Web Development", desc: "HTML, CSS, JavaScript, React", gradient: "from-blue-500/20 to-cyan-500/20" },
@@ -20,6 +21,12 @@ const stats = [
   { value: "∞", label: "Lines of Code", icon: Zap },
 ];
 
+const socials = [
+  { icon: Send, href: "https://t.me/abule_48", label: "Telegram" },
+  { icon: Phone, href: "https://wa.me/2510954897133", label: "WhatsApp" },
+  { icon: Mail, href: "mailto:abuleman1221@gmail.com", label: "Email" },
+];
+
 const Index = () => {
   const { data: blogPosts = [] } = useBlogPosts();
   const { data: projects = [] } = useProjects();
@@ -28,11 +35,9 @@ const Index = () => {
     <main className="pt-16">
       {/* Hero */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-        {/* Background effects */}
+        <img src={heroBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-40" width={1920} height={1080} />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/40" />
         <div className="absolute inset-0 hero-gradient" />
-        <div className="absolute inset-0 grid-pattern opacity-30" />
-        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-32 w-80 h-80 bg-primary/3 rounded-full blur-3xl" />
 
         <div className="container py-20 relative">
           <div className="max-w-3xl">
@@ -57,28 +62,28 @@ const Index = () => {
             </p>
 
             <div className="flex flex-wrap gap-3 opacity-0 animate-fade-up" style={{ animationDelay: "650ms" }}>
-              <Link
-                to="/blog"
-                className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] transition-all duration-200 active:scale-[0.97]"
-              >
+              <Link to="/blog" className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] transition-all duration-200 active:scale-[0.97]">
                 Read Blog <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>
-              <Link
-                to="/projects"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-card/50 text-foreground font-semibold text-sm hover:border-primary/30 hover:bg-card transition-all duration-200 active:scale-[0.97]"
-              >
+              <Link to="/projects" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-card/50 text-foreground font-semibold text-sm hover:border-primary/30 hover:bg-card transition-all duration-200 active:scale-[0.97]">
                 View Projects
               </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-muted-foreground font-medium text-sm hover:text-foreground transition-colors"
-              >
+              <Link to="/contact" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-muted-foreground font-medium text-sm hover:text-foreground transition-colors">
                 Get in Touch
               </Link>
             </div>
 
+            {/* Social links */}
+            <div className="flex items-center gap-2 mt-6 opacity-0 animate-fade-up" style={{ animationDelay: "750ms" }}>
+              {socials.map(({ icon: Icon, href, label }) => (
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-xl bg-secondary/80 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all active:scale-95" aria-label={label}>
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+
             {/* Quick stats */}
-            <div className="flex items-center gap-8 mt-12 pt-8 border-t border-border/30 opacity-0 animate-fade-up" style={{ animationDelay: "800ms" }}>
+            <div className="flex items-center gap-8 mt-10 pt-8 border-t border-border/30 opacity-0 animate-fade-up" style={{ animationDelay: "800ms" }}>
               {stats.map((stat) => (
                 <div key={stat.label} className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">

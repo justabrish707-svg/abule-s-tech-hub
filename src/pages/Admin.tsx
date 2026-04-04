@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import CoverImageUpload from "@/components/CoverImageUpload";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useBlogPosts, type BlogPost } from "@/hooks/useBlogPosts";
 import { useContactMessages, type ContactMessage } from "@/hooks/useContactMessages";
 import { useSubscribers, type Subscriber } from "@/hooks/useNewsletter";
@@ -61,8 +62,12 @@ const Admin = () => {
   const [editingProject, setEditingProject] = useState<ProjectForm | null>(null);
   const [isNewProject, setIsNewProject] = useState(false);
 
+  const { isAdmin, loading: adminLoading } = useAdminCheck();
+
   useEffect(() => { if (!user) navigate("/auth"); }, [user, navigate]);
   if (!user) return null;
+  if (adminLoading) return <main className="pt-16 min-h-screen flex items-center justify-center"><p className="text-muted-foreground">Loading...</p></main>;
+  if (!isAdmin) return <main className="pt-16 min-h-screen flex items-center justify-center"><div className="text-center"><h1 className="text-2xl font-bold mb-2">Access Denied</h1><p className="text-muted-foreground">You don't have admin privileges.</p></div></main>;
 
   const generateSlug = (t: string) => t.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").slice(0, 60);
 

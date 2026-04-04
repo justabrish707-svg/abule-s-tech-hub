@@ -68,7 +68,7 @@ const Admin = () => {
 
   // Post handlers
   const handleNewPost = () => { setEditingPost({ ...emptyPostForm }); setIsNewPost(true); setPreview(false); setTab("posts"); };
-  const handleEditPost = (p: BlogPost) => { setEditingPost({ id: p.id, title: p.title, excerpt: p.excerpt, content: p.content, category: p.category, read_time: p.read_time }); setIsNewPost(false); setPreview(false); };
+  const handleEditPost = (p: BlogPost) => { setEditingPost({ id: p.id, title: p.title, excerpt: p.excerpt, content: p.content, category: p.category, read_time: p.read_time, cover_image: p.cover_image || null }); setIsNewPost(false); setPreview(false); };
   const handleCancelPost = () => { setEditingPost(null); setIsNewPost(false); setPreview(false); };
 
   const handleSavePost = async () => {

@@ -53,8 +53,9 @@ const Navbar = () => {
               </li>
             ))}
           </ul>
+          <ThemeToggle />
           {user ? (
-            <div className="flex items-center gap-1.5 ml-3 pl-3 border-l border-border/30">
+            <div className="flex items-center gap-1.5 ml-2 pl-2 border-l border-border/30">
               <Link
                 to="/admin"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"

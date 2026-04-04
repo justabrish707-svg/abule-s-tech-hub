@@ -24,6 +24,7 @@ interface PostForm {
   content: string;
   category: string;
   read_time: string;
+  cover_image: string | null;
 }
 
 interface ProjectForm {

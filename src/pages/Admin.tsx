@@ -80,7 +80,7 @@ const Admin = () => {
         if (error) throw error;
         toast.success("Post published! 🎉");
       } else {
-        const { error } = await supabase.from("blog_posts").update({ title: editingPost.title.trim(), excerpt: editingPost.excerpt.trim(), content: editingPost.content.trim(), category: editingPost.category, read_time: editingPost.read_time, updated_at: new Date().toISOString() }).eq("id", editingPost.id);
+        const { error } = await supabase.from("blog_posts").update({ title: editingPost.title.trim(), excerpt: editingPost.excerpt.trim(), content: editingPost.content.trim(), category: editingPost.category, read_time: editingPost.read_time, cover_image: editingPost.cover_image, updated_at: new Date().toISOString() }).eq("id", editingPost.id);
         if (error) throw error;
         toast.success("Post updated!");
       }

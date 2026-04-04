@@ -80,7 +80,7 @@ const Navbar = () => {
           ) : (
             <Link
               to="/auth"
-              className="inline-flex items-center gap-1.5 ml-3 px-4 py-2 rounded-xl text-xs font-semibold bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 hover:scale-[1.02] transition-all"
+              className="inline-flex items-center gap-1.5 ml-2 px-4 py-2 rounded-xl text-xs font-semibold bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:shadow-primary/30 hover:scale-[1.02] transition-all"
             >
               <LogIn className="h-3.5 w-3.5" /> Sign In
             </Link>

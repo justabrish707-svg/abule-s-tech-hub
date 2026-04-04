@@ -10,6 +10,7 @@ export interface BlogPost {
   category: string;
   read_time: string;
   author_id: string | null;
+  cover_image: string | null;
   created_at: string;
   updated_at: string;
 }

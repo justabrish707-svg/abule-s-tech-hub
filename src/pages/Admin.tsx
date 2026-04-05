@@ -73,6 +73,21 @@ const Admin = () => {
 
   const { isAdmin, loading: adminLoading } = useAdminCheck();
 
+  // Filtered messages (hook must be before early returns)
+  const filteredMessages = useMemo(() => {
+    let result = messages;
+    if (messageFilter === "unread") result = result.filter((m) => !m.is_read);
+    if (messageFilter === "read") result = result.filter((m) => m.is_read);
+    if (messageSearch.trim()) {
+      const q = messageSearch.toLowerCase();
+      result = result.filter((m) => m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q) || m.message.toLowerCase().includes(q));
+    }
+    return result;
+  }, [messages, messageFilter, messageSearch]);
+
+  const unreadMessages = messages.filter((m) => !m.is_read).length;
+  const activeSubscribers = subscribers.filter((s) => s.is_active).length;
+
   useEffect(() => { if (!user) navigate("/auth"); }, [user, navigate]);
   if (!user) return null;
   if (adminLoading) return <main className="pt-16 min-h-screen flex items-center justify-center"><p className="text-muted-foreground">Loading...</p></main>;

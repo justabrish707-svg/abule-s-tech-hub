@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Plus, Pencil, Trash2, Save, X, Eye, FileText, Clock, Tag, Type, AlignLeft, Sparkles,
-  Mail, MessageSquare, Users, FolderOpen, BarChart3, CheckCircle, Circle, ImagePlus
+  Mail, MessageSquare, Users, FolderOpen, BarChart3, CheckCircle, Circle, ImagePlus,
+  Search, Download, Check, Square, CheckSquare
 } from "lucide-react";
 import CoverImageUpload from "@/components/CoverImageUpload";
 import { useAuth } from "@/contexts/AuthContext";
@@ -62,7 +63,30 @@ const Admin = () => {
   const [editingProject, setEditingProject] = useState<ProjectForm | null>(null);
   const [isNewProject, setIsNewProject] = useState(false);
 
+  // Bulk selection
+  const [selectedPosts, setSelectedPosts] = useState<Set<string>>(new Set());
+  const [selectedProjects, setSelectedProjects] = useState<Set<string>>(new Set());
+
+  // Search/filter for messages
+  const [messageSearch, setMessageSearch] = useState("");
+  const [messageFilter, setMessageFilter] = useState<"all" | "unread" | "read">("all");
+
   const { isAdmin, loading: adminLoading } = useAdminCheck();
+
+  // Filtered messages (hook must be before early returns)
+  const filteredMessages = useMemo(() => {
+    let result = messages;
+    if (messageFilter === "unread") result = result.filter((m) => !m.is_read);
+    if (messageFilter === "read") result = result.filter((m) => m.is_read);
+    if (messageSearch.trim()) {
+      const q = messageSearch.toLowerCase();
+      result = result.filter((m) => m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q) || m.message.toLowerCase().includes(q));
+    }
+    return result;
+  }, [messages, messageFilter, messageSearch]);
+
+  const unreadMessages = messages.filter((m) => !m.is_read).length;
+  const activeSubscribers = subscribers.filter((s) => s.is_active).length;
 
   useEffect(() => { if (!user) navigate("/auth"); }, [user, navigate]);
   if (!user) return null;
@@ -105,6 +129,36 @@ const Admin = () => {
     } catch (err: any) { toast.error(err.message); }
   };
 
+  // Bulk delete posts
+  const handleBulkDeletePosts = async () => {
+    if (selectedPosts.size === 0) return;
+    if (!confirm(`Delete ${selectedPosts.size} selected post(s)?`)) return;
+    try {
+      const ids = Array.from(selectedPosts);
+      const { error } = await supabase.from("blog_posts").delete().in("id", ids);
+      if (error) throw error;
+      toast.success(`${ids.length} post(s) deleted`);
+      setSelectedPosts(new Set());
+      queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
+    } catch (err: any) { toast.error(err.message); }
+  };
+
+  const togglePostSelection = (id: string) => {
+    setSelectedPosts((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAllPosts = () => {
+    if (selectedPosts.size === posts.length) {
+      setSelectedPosts(new Set());
+    } else {
+      setSelectedPosts(new Set(posts.map((p) => p.id)));
+    }
+  };
+
   // Project handlers
   const handleNewProject = () => { setEditingProject({ ...emptyProjectForm }); setIsNewProject(true); setTab("projects"); };
   const handleEditProject = (p: Project) => { setEditingProject({ id: p.id, title: p.title, description: p.description, tech: (p.tech || []).join(", "), github: p.github || "", demo: p.demo || "", status: p.status, display_order: p.display_order }); setIsNewProject(false); };
@@ -133,8 +187,50 @@ const Admin = () => {
     try { await deleteProjectMut.mutateAsync(id); toast.success("Project deleted"); } catch (err: any) { toast.error(err.message); }
   };
 
-  const unreadMessages = messages.filter((m) => !m.is_read).length;
-  const activeSubscribers = subscribers.filter((s) => s.is_active).length;
+  // Bulk delete projects
+  const handleBulkDeleteProjects = async () => {
+    if (selectedProjects.size === 0) return;
+    if (!confirm(`Delete ${selectedProjects.size} selected project(s)?`)) return;
+    try {
+      const ids = Array.from(selectedProjects);
+      for (const id of ids) {
+        await deleteProjectMut.mutateAsync(id);
+      }
+      toast.success(`${ids.length} project(s) deleted`);
+      setSelectedProjects(new Set());
+    } catch (err: any) { toast.error(err.message); }
+  };
+
+  const toggleProjectSelection = (id: string) => {
+    setSelectedProjects((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAllProjects = () => {
+    if (selectedProjects.size === projects.length) {
+      setSelectedProjects(new Set());
+    } else {
+      setSelectedProjects(new Set(projects.map((p) => p.id)));
+    }
+  };
+
+  // Export subscribers as CSV
+  const handleExportCSV = () => {
+    if (subscribers.length === 0) { toast.error("No subscribers to export"); return; }
+    const header = "Email,Subscribed At,Status\n";
+    const rows = subscribers.map((s) => `"${s.email}","${new Date(s.subscribed_at).toLocaleDateString()}","${s.is_active ? "Active" : "Inactive"}"`).join("\n");
+    const blob = new Blob([header + rows], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `subscribers-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("CSV downloaded!");
+  };
 
   const tabs: { key: Tab; label: string; icon: typeof FileText; badge?: number }[] = [
     { key: "overview", label: "Overview", icon: BarChart3 },
@@ -143,6 +239,12 @@ const Admin = () => {
     { key: "messages", label: "Messages", icon: MessageSquare, badge: unreadMessages },
     { key: "subscribers", label: "Subscribers", icon: Users, badge: activeSubscribers },
   ];
+
+  const SelectCheckbox = ({ checked, onClick }: { checked: boolean; onClick: () => void }) => (
+    <button onClick={onClick} className="p-1 rounded transition-colors hover:bg-secondary">
+      {checked ? <CheckSquare className="h-4 w-4 text-primary" /> : <Square className="h-4 w-4 text-muted-foreground/40" />}
+    </button>
+  );
 
   return (
     <main className="pt-16 min-h-screen">
@@ -253,7 +355,19 @@ const Admin = () => {
         {tab === "posts" && (
           <div>
             {!editingPost && (
-              <div className="flex justify-end mb-4">
+              <div className="flex items-center justify-between mb-4 gap-3">
+                <div className="flex items-center gap-2">
+                  {posts.length > 0 && (
+                    <>
+                      <SelectCheckbox checked={selectedPosts.size === posts.length && posts.length > 0} onClick={toggleAllPosts} />
+                      {selectedPosts.size > 0 && (
+                        <button onClick={handleBulkDeletePosts} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-destructive/10 text-destructive text-xs font-medium hover:bg-destructive/20 transition-colors">
+                          <Trash2 className="h-3.5 w-3.5" /> Delete {selectedPosts.size}
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
                 <button onClick={handleNewPost} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] transition-all active:scale-95">
                   <Plus className="h-4 w-4" /> New Post
                 </button>
@@ -341,7 +455,8 @@ const Admin = () => {
             ) : (
               <div className="space-y-2">
                 {posts.map((post) => (
-                  <div key={post.id} className="group flex items-center justify-between rounded-xl border border-border/30 bg-card p-4 hover:border-primary/20 transition-all">
+                  <div key={post.id} className={`group flex items-center gap-3 rounded-xl border bg-card p-4 hover:border-primary/20 transition-all ${selectedPosts.has(post.id) ? "border-primary/40 bg-primary/[0.03]" : "border-border/30"}`}>
+                    <SelectCheckbox checked={selectedPosts.has(post.id)} onClick={() => togglePostSelection(post.id)} />
                     <div className="flex-1 min-w-0 mr-4">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-semibold">{post.category}</span>
@@ -364,7 +479,19 @@ const Admin = () => {
         {tab === "projects" && (
           <div>
             {!editingProject && (
-              <div className="flex justify-end mb-4">
+              <div className="flex items-center justify-between mb-4 gap-3">
+                <div className="flex items-center gap-2">
+                  {projects.length > 0 && (
+                    <>
+                      <SelectCheckbox checked={selectedProjects.size === projects.length && projects.length > 0} onClick={toggleAllProjects} />
+                      {selectedProjects.size > 0 && (
+                        <button onClick={handleBulkDeleteProjects} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-destructive/10 text-destructive text-xs font-medium hover:bg-destructive/20 transition-colors">
+                          <Trash2 className="h-3.5 w-3.5" /> Delete {selectedProjects.size}
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
                 <button onClick={handleNewProject} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] transition-all active:scale-95">
                   <Plus className="h-4 w-4" /> New Project
                 </button>
@@ -428,7 +555,8 @@ const Admin = () => {
             ) : (
               <div className="space-y-2">
                 {projects.map((p) => (
-                  <div key={p.id} className="group flex items-center justify-between rounded-xl border border-border/30 bg-card p-4 hover:border-primary/20 transition-all">
+                  <div key={p.id} className={`group flex items-center gap-3 rounded-xl border bg-card p-4 hover:border-primary/20 transition-all ${selectedProjects.has(p.id) ? "border-primary/40 bg-primary/[0.03]" : "border-border/30"}`}>
+                    <SelectCheckbox checked={selectedProjects.has(p.id)} onClick={() => toggleProjectSelection(p.id)} />
                     <div className="flex-1 min-w-0 mr-4">
                       <div className="flex items-center gap-2 mb-1">
                         <span className={`text-xs font-medium ${p.status === "completed" ? "text-primary" : p.status === "in-progress" ? "text-amber-400" : "text-muted-foreground"}`}>{p.status}</span>
@@ -450,15 +578,45 @@ const Admin = () => {
         {/* Messages Tab */}
         {tab === "messages" && (
           <ScrollReveal>
-            {messages.length === 0 ? (
+            {/* Search & Filter bar */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-5">
+              <div className="relative flex-1 w-full">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
+                <input
+                  type="text"
+                  value={messageSearch}
+                  onChange={(e) => setMessageSearch(e.target.value)}
+                  placeholder="Search by name, email, or message..."
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border/50 bg-secondary/50 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                />
+              </div>
+              <div className="flex items-center gap-1">
+                {(["all", "unread", "read"] as const).map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => setMessageFilter(f)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-all ${
+                      messageFilter === f
+                        ? "bg-primary/10 text-primary border border-primary/20"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    {f} {f === "unread" && unreadMessages > 0 ? `(${unreadMessages})` : ""}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {filteredMessages.length === 0 ? (
               <div className="text-center py-20">
                 <MessageSquare className="h-10 w-10 text-primary mx-auto mb-3" />
-                <p className="font-semibold">No messages yet</p>
-                <p className="text-sm text-muted-foreground">Messages from your contact form will appear here</p>
+                <p className="font-semibold">{messages.length === 0 ? "No messages yet" : "No matching messages"}</p>
+                <p className="text-sm text-muted-foreground">{messages.length === 0 ? "Messages from your contact form will appear here" : "Try a different search or filter"}</p>
               </div>
             ) : (
               <div className="space-y-3">
-                {messages.map((m) => (
+                <p className="text-xs text-muted-foreground">{filteredMessages.length} message{filteredMessages.length !== 1 ? "s" : ""}</p>
+                {filteredMessages.map((m) => (
                   <div key={m.id} className={`rounded-xl border bg-card p-5 transition-all ${m.is_read ? "border-border/30" : "border-primary/30 bg-primary/[0.02]"}`}>
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
@@ -489,6 +647,9 @@ const Admin = () => {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <p className="text-sm text-muted-foreground">{activeSubscribers} active subscribers</p>
+                  <button onClick={handleExportCSV} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-border/50 text-sm font-medium text-foreground hover:bg-secondary transition-colors">
+                    <Download className="h-4 w-4" /> Export CSV
+                  </button>
                 </div>
                 <div className="rounded-xl border border-border/50 overflow-hidden">
                   <table className="w-full">

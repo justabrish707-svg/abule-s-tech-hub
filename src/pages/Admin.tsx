@@ -217,6 +217,16 @@ const Admin = () => {
     }
   };
 
+  // Mark message as read/unread
+  const handleToggleRead = async (id: string, currentlyRead: boolean) => {
+    try {
+      const { error } = await supabase.from("contact_messages").update({ is_read: !currentlyRead }).eq("id", id);
+      if (error) throw error;
+      queryClient.invalidateQueries({ queryKey: ["contact-messages"] });
+      toast.success(currentlyRead ? "Marked as unread" : "Marked as read");
+    } catch (err: any) { toast.error(err.message); }
+  };
+
   // Export subscribers as CSV
   const handleExportCSV = () => {
     if (subscribers.length === 0) { toast.error("No subscribers to export"); return; }

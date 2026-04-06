@@ -217,6 +217,16 @@ const Admin = () => {
     }
   };
 
+  // Mark message as read/unread
+  const handleToggleRead = async (id: string, currentlyRead: boolean) => {
+    try {
+      const { error } = await supabase.from("contact_messages").update({ is_read: !currentlyRead }).eq("id", id);
+      if (error) throw error;
+      queryClient.invalidateQueries({ queryKey: ["contact-messages"] });
+      toast.success(currentlyRead ? "Marked as unread" : "Marked as read");
+    } catch (err: any) { toast.error(err.message); }
+  };
+
   // Export subscribers as CSV
   const handleExportCSV = () => {
     if (subscribers.length === 0) { toast.error("No subscribers to export"); return; }
@@ -624,7 +634,20 @@ const Admin = () => {
                         <span className="text-sm font-semibold">{m.name}</span>
                         <span className="text-xs text-muted-foreground">{m.email}</span>
                       </div>
-                      <span className="text-xs text-muted-foreground">{new Date(m.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleToggleRead(m.id, m.is_read)}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                            m.is_read
+                              ? "text-muted-foreground hover:bg-secondary"
+                              : "text-primary hover:bg-primary/10"
+                          }`}
+                        >
+                          {m.is_read ? <Eye className="h-3 w-3" /> : <Check className="h-3 w-3" />}
+                          {m.is_read ? "Mark unread" : "Mark read"}
+                        </button>
+                        <span className="text-xs text-muted-foreground">{new Date(m.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                      </div>
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed">{m.message}</p>
                   </div>

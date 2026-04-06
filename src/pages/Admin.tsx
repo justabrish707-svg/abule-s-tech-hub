@@ -634,7 +634,20 @@ const Admin = () => {
                         <span className="text-sm font-semibold">{m.name}</span>
                         <span className="text-xs text-muted-foreground">{m.email}</span>
                       </div>
-                      <span className="text-xs text-muted-foreground">{new Date(m.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleToggleRead(m.id, m.is_read)}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                            m.is_read
+                              ? "text-muted-foreground hover:bg-secondary"
+                              : "text-primary hover:bg-primary/10"
+                          }`}
+                        >
+                          {m.is_read ? <Eye className="h-3 w-3" /> : <Check className="h-3 w-3" />}
+                          {m.is_read ? "Mark unread" : "Mark read"}
+                        </button>
+                        <span className="text-xs text-muted-foreground">{new Date(m.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                      </div>
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed">{m.message}</p>
                   </div>

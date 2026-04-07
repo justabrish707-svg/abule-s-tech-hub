@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { contactSchema } from "@/lib/validation";
 
 export interface ContactMessage {
   id: string;
@@ -27,10 +28,11 @@ export const useContactMessages = () => {
 export const useSendContactMessage = () => {
   return useMutation({
     mutationFn: async (msg: { name: string; email: string; message: string }) => {
+      const parsed = contactSchema.parse(msg);
       const { error } = await supabase.from("contact_messages").insert({
-        name: msg.name.trim(),
-        email: msg.email.trim(),
-        message: msg.message.trim(),
+        name: parsed.name,
+        email: parsed.email,
+        message: parsed.message,
       });
       if (error) throw error;
     },

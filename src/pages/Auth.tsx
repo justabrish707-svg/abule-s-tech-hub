@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 import { Mail, Lock, User, LogIn, UserPlus, Terminal, Eye, EyeOff, Sparkles, Code2, Zap } from "lucide-react";
+import { authSchema, signupSchema } from "@/lib/validation";
 
 const FloatingParticle = ({ delay, size, x, y, duration }: { delay: number; size: number; x: number; y: number; duration: number }) => (
   <div
@@ -44,18 +45,43 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [forgotMode, setForgotMode] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) {
+      toast.error("Please enter your email address.");
+      return;
+    }
+    setLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("Password reset email sent! Check your inbox.");
+    }
+    setLoading(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     if (isLogin) {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const parsed = authSchema.safeParse({ email, password });
+      if (!parsed.success) {
+        toast.error(parsed.error.errors[0].message);
+        setLoading(false);
+        return;
+      }
+      const { error } = await supabase.auth.signInWithPassword({ email: parsed.data.email, password: parsed.data.password });
       if (error) {
         toast.error(error.message);
       } else {
@@ -63,21 +89,17 @@ const Auth = () => {
         navigate("/");
       }
     } else {
-      if (!username.trim()) {
-        toast.error("Please enter a username.");
-        setLoading(false);
-        return;
-      }
-      if (password.length < 6) {
-        toast.error("Password must be at least 6 characters.");
+      const parsed = signupSchema.safeParse({ email, password, username });
+      if (!parsed.success) {
+        toast.error(parsed.error.errors[0].message);
         setLoading(false);
         return;
       }
       const { error } = await supabase.auth.signUp({
-        email,
-        password,
+        email: parsed.data.email,
+        password: parsed.data.password,
         options: {
-          data: { username },
+          data: { username: parsed.data.username },
           emailRedirectTo: window.location.origin,
         },
       });
@@ -284,6 +306,26 @@ const Auth = () => {
                   </div>
                 )}
               </div>
+
+              {/* Forgot password link */}
+              {isLogin && (
+                <div className="text-right">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (!email.trim()) {
+                        toast.error("Enter your email first, then click 'Forgot password'");
+                        return;
+                      }
+                      handleForgotPassword(e);
+                    }}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+              )}
 
               <button
                 type="submit"

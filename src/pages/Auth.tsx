@@ -307,6 +307,26 @@ const Auth = () => {
                 )}
               </div>
 
+              {/* Forgot password link */}
+              {isLogin && (
+                <div className="text-right">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (!email.trim()) {
+                        toast.error("Enter your email first, then click 'Forgot password'");
+                        return;
+                      }
+                      handleForgotPassword(e);
+                    }}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+              )}
+
               <button
                 type="submit"
                 disabled={loading}

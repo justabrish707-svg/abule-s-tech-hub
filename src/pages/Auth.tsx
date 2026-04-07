@@ -52,12 +52,36 @@ const Auth = () => {
     setMounted(true);
   }, []);
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) {
+      toast.error("Please enter your email address.");
+      return;
+    }
+    setLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("Password reset email sent! Check your inbox.");
+    }
+    setLoading(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     if (isLogin) {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const parsed = authSchema.safeParse({ email, password });
+      if (!parsed.success) {
+        toast.error(parsed.error.errors[0].message);
+        setLoading(false);
+        return;
+      }
+      const { error } = await supabase.auth.signInWithPassword({ email: parsed.data.email, password: parsed.data.password });
       if (error) {
         toast.error(error.message);
       } else {
@@ -65,21 +89,17 @@ const Auth = () => {
         navigate("/");
       }
     } else {
-      if (!username.trim()) {
-        toast.error("Please enter a username.");
-        setLoading(false);
-        return;
-      }
-      if (password.length < 6) {
-        toast.error("Password must be at least 6 characters.");
+      const parsed = signupSchema.safeParse({ email, password, username });
+      if (!parsed.success) {
+        toast.error(parsed.error.errors[0].message);
         setLoading(false);
         return;
       }
       const { error } = await supabase.auth.signUp({
-        email,
-        password,
+        email: parsed.data.email,
+        password: parsed.data.password,
         options: {
-          data: { username },
+          data: { username: parsed.data.username },
           emailRedirectTo: window.location.origin,
         },
       });

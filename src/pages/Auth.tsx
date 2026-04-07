@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 import { Mail, Lock, User, LogIn, UserPlus, Terminal, Eye, EyeOff, Sparkles, Code2, Zap } from "lucide-react";
 

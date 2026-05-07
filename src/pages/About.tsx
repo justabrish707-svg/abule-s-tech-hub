@@ -16,25 +16,35 @@ const About = () => (
       <img src={aboutBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-30" loading="lazy" width={1920} height={768} />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/40" />
       <div className="absolute inset-0 grid-pattern opacity-20" />
-      <div className="container max-w-3xl py-20 relative">
-        <ScrollReveal>
-          <p className="text-sm font-medium text-primary mb-3">About Me</p>
-          <h1 className="text-4xl sm:text-5xl font-bold mb-6 leading-tight">
-            Code. Create. <span className="text-gradient">Learn.</span> Repeat.
-          </h1>
-          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-            <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> Arba Minch, Ethiopia</span>
-            <span className="inline-flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5" /> CS Student</span>
-            <span className="inline-flex items-center gap-1.5"><Coffee className="h-3.5 w-3.5" /> Powered by caffeine</span>
-          </div>
-          <div className="flex gap-2 mt-5">
-            {socials.map(({ icon: Icon, href, label }) => (
-              <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="h-9 w-9 rounded-lg bg-secondary/80 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all active:scale-95" aria-label={label}>
-                <Icon className="h-4 w-4" />
-              </a>
-            ))}
-          </div>
-        </ScrollReveal>
+      <div className="container py-20 relative">
+        <div className="grid md:grid-cols-[1fr_auto] gap-10 items-center max-w-5xl mx-auto">
+          <ScrollReveal>
+            <p className="text-sm font-medium text-primary mb-3">About Me</p>
+            <h1 className="text-4xl sm:text-5xl font-bold mb-6 leading-tight">
+              Code. Create. <span className="text-gradient">Learn.</span> Repeat.
+            </h1>
+            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+              <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> Arba Minch, Ethiopia</span>
+              <span className="inline-flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5" /> CS Student</span>
+              <span className="inline-flex items-center gap-1.5"><Coffee className="h-3.5 w-3.5" /> Powered by caffeine</span>
+            </div>
+            <div className="flex gap-2 mt-5">
+              {socials.map(({ icon: Icon, href, label }) => (
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="h-9 w-9 rounded-lg bg-secondary/80 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all active:scale-95" aria-label={label}>
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={120}>
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 shrink-0">
+              <div className="absolute -inset-3 rounded-full bg-gradient-to-br from-primary/40 via-primary/10 to-transparent blur-2xl" />
+              <div className="relative h-full w-full rounded-full overflow-hidden border-2 border-primary/30 glow-border">
+                <img src={abulePortrait} alt="Abule" className="h-full w-full object-cover" />
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
       </div>
     </section>
 

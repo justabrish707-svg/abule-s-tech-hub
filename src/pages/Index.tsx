@@ -8,6 +8,7 @@ import NewsletterSignup from "@/components/NewsletterSignup";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useProjects } from "@/hooks/useProjects";
 import heroBg from "@/assets/hero-bg.jpg";
+import abulePortrait from "@/assets/abule-portrait.png";
 
 const skills = [
   { icon: Globe, label: "Web Development", desc: "HTML, CSS, JavaScript, React", gradient: "from-blue-500/20 to-cyan-500/20" },

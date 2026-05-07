@@ -106,20 +106,27 @@ const Index = () => {
 
             {/* Portrait */}
             <div className="hidden lg:block relative opacity-0 animate-fade-up" style={{ animationDelay: "400ms" }}>
-              <div className="relative aspect-[4/5] max-w-md mx-auto">
-                <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-primary/30 via-primary/10 to-transparent blur-2xl" />
-                <div className="absolute -inset-1 rounded-[1.75rem] bg-gradient-to-br from-primary/40 to-transparent" />
-                <div className="relative h-full w-full rounded-[1.5rem] overflow-hidden border border-primary/20 glow-border">
-                  <img src={abulePortrait} alt="Abule — founder of Abule Tech" className="h-full w-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+              <div className="relative aspect-[4/5] max-w-md mx-auto group">
+                <div className="absolute -inset-6 rounded-[2.25rem] bg-gradient-to-br from-primary/40 via-primary/10 to-transparent blur-3xl animate-[pulse-glow_4s_ease-in-out_infinite]" />
+                <div className="absolute -inset-1 rounded-[1.75rem] bg-gradient-to-br from-primary/50 via-primary-glow/30 to-transparent" />
+                <div className="relative h-full w-full rounded-[1.5rem] overflow-hidden border border-primary/20 glow-border transition-transform duration-700 group-hover:scale-[1.02]">
+                  <img src={abulePortrait} alt="Abule — founder of Abule Tech" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+                  {/* Subtle scanline shimmer */}
+                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(110deg,transparent_40%,hsl(var(--primary)/0.12)_50%,transparent_60%)] bg-[length:250%_100%] animate-[shimmer_4s_linear_infinite]" />
                 </div>
                 {/* Floating badge */}
-                <div className="absolute -bottom-4 -left-4 bg-card/90 backdrop-blur-xl border border-border/60 rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3">
+                <div className="absolute -bottom-4 -left-4 bg-card/90 backdrop-blur-xl border border-border/60 rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3 animate-[float_5s_ease-in-out_infinite]">
                   <div className="h-2.5 w-2.5 rounded-full bg-primary animate-pulse" />
                   <div>
                     <p className="text-xs font-semibold">Available for work</p>
                     <p className="text-[10px] text-muted-foreground">Let's build together</p>
                   </div>
+                </div>
+                {/* Floating tech chip */}
+                <div className="absolute -top-3 -right-3 bg-card/90 backdrop-blur-xl border border-border/60 rounded-xl px-3 py-2 shadow-xl flex items-center gap-2 animate-[float_6s_ease-in-out_infinite]">
+                  <Code2 className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-[11px] font-mono font-semibold">{`</dev>`}</span>
                 </div>
               </div>
             </div>

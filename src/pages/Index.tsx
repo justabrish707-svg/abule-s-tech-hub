@@ -91,12 +91,12 @@ const Index = () => {
               {/* Quick stats */}
               <div className="flex flex-wrap items-center gap-8 mt-10 pt-8 border-t border-border/30 opacity-0 animate-fade-up" style={{ animationDelay: "800ms" }}>
                 {stats.map((stat) => (
-                  <div key={stat.label} className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <div key={stat.label} className="group flex items-center gap-3 cursor-default">
+                    <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110 group-hover:rotate-3">
                       <stat.icon className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-xl font-bold">{stat.value}</p>
+                      <p className="text-xl font-bold text-gradient">{stat.value}</p>
                       <p className="text-xs text-muted-foreground">{stat.label}</p>
                     </div>
                   </div>

@@ -5,6 +5,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useAnalytics } from "@/hooks/useAnalytics";
+
+const AnalyticsTracker = () => {
+  useAnalytics();
+  return null;
+};
 import Index from "./pages/Index";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";

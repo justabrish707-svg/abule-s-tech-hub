@@ -39,6 +39,10 @@ const Index = () => {
         <img src={heroBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-40" width={1920} height={1080} />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/40" />
         <div className="absolute inset-0 hero-gradient" />
+        <div className="absolute inset-0 grid-pattern opacity-[0.07]" />
+        {/* Floating ambient orbs */}
+        <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-primary/20 blur-3xl animate-[float_8s_ease-in-out_infinite]" />
+        <div className="pointer-events-none absolute bottom-0 right-10 h-96 w-96 rounded-full bg-primary-glow/10 blur-3xl animate-[float_11s_ease-in-out_infinite]" />
 
         <div className="container py-20 relative">
           <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 items-center">

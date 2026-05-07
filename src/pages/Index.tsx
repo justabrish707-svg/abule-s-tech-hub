@@ -8,6 +8,7 @@ import NewsletterSignup from "@/components/NewsletterSignup";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useProjects } from "@/hooks/useProjects";
 import heroBg from "@/assets/hero-bg.jpg";
+import abulePortrait from "@/assets/abule-portrait.png";
 
 const skills = [
   { icon: Globe, label: "Web Development", desc: "HTML, CSS, JavaScript, React", gradient: "from-blue-500/20 to-cyan-500/20" },
@@ -40,61 +41,83 @@ const Index = () => {
         <div className="absolute inset-0 hero-gradient" />
 
         <div className="container py-20 relative">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-xs font-medium text-primary mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "100ms" }}>
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              Open to opportunities
-            </div>
+          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-xs font-medium text-primary mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "100ms" }}>
+                <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                Open to opportunities
+              </div>
 
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-5 opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
-              Hi, I'm <span className="text-gradient">Abule</span>
-              <br />
-              <span className="text-muted-foreground text-3xl sm:text-4xl md:text-5xl font-bold">I build things for the web</span>
-            </h1>
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-5 opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
+                Hi, I'm <span className="text-gradient">Abule</span>
+                <br />
+                <span className="text-muted-foreground text-3xl sm:text-4xl md:text-5xl font-bold">I build things for the web</span>
+              </h1>
 
-            <div className="text-lg sm:text-xl h-8 mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "350ms" }}>
-              <TypingEffect />
-            </div>
+              <div className="text-lg sm:text-xl h-8 mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "350ms" }}>
+                <TypingEffect />
+              </div>
 
-            <p className="text-muted-foreground max-w-xl mb-8 text-base leading-relaxed opacity-0 animate-fade-up" style={{ animationDelay: "500ms" }}>
-              Computer science student sharing my journey in tech, coding, and cybersecurity.
-              I believe in learning by building and teaching what I learn.
-            </p>
+              <p className="text-muted-foreground max-w-xl mb-8 text-base leading-relaxed opacity-0 animate-fade-up" style={{ animationDelay: "500ms" }}>
+                Computer science student sharing my journey in tech, coding, and cybersecurity.
+                I believe in learning by building and teaching what I learn.
+              </p>
 
-            <div className="flex flex-wrap gap-3 opacity-0 animate-fade-up" style={{ animationDelay: "650ms" }}>
-              <Link to="/blog" className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] transition-all duration-200 active:scale-[0.97]">
-                Read Blog <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-              <Link to="/projects" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-card/50 text-foreground font-semibold text-sm hover:border-primary/30 hover:bg-card transition-all duration-200 active:scale-[0.97]">
-                View Projects
-              </Link>
-              <Link to="/contact" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-muted-foreground font-medium text-sm hover:text-foreground transition-colors">
-                Get in Touch
-              </Link>
-            </div>
+              <div className="flex flex-wrap gap-3 opacity-0 animate-fade-up" style={{ animationDelay: "650ms" }}>
+                <Link to="/blog" className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] transition-all duration-200 active:scale-[0.97]">
+                  Read Blog <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
+                <Link to="/projects" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-card/50 text-foreground font-semibold text-sm hover:border-primary/30 hover:bg-card transition-all duration-200 active:scale-[0.97]">
+                  View Projects
+                </Link>
+                <Link to="/contact" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-muted-foreground font-medium text-sm hover:text-foreground transition-colors">
+                  Get in Touch
+                </Link>
+              </div>
 
-            {/* Social links */}
-            <div className="flex items-center gap-2 mt-6 opacity-0 animate-fade-up" style={{ animationDelay: "750ms" }}>
-              {socials.map(({ icon: Icon, href, label }) => (
-                <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-xl bg-secondary/80 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all active:scale-95" aria-label={label}>
-                  <Icon className="h-4 w-4" />
-                </a>
-              ))}
-            </div>
+              {/* Social links */}
+              <div className="flex items-center gap-2 mt-6 opacity-0 animate-fade-up" style={{ animationDelay: "750ms" }}>
+                {socials.map(({ icon: Icon, href, label }) => (
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-xl bg-secondary/80 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all active:scale-95" aria-label={label}>
+                    <Icon className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
 
-            {/* Quick stats */}
-            <div className="flex items-center gap-8 mt-10 pt-8 border-t border-border/30 opacity-0 animate-fade-up" style={{ animationDelay: "800ms" }}>
-              {stats.map((stat) => (
-                <div key={stat.label} className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <stat.icon className="h-5 w-5 text-primary" />
+              {/* Quick stats */}
+              <div className="flex flex-wrap items-center gap-8 mt-10 pt-8 border-t border-border/30 opacity-0 animate-fade-up" style={{ animationDelay: "800ms" }}>
+                {stats.map((stat) => (
+                  <div key={stat.label} className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <stat.icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold">{stat.value}</p>
+                      <p className="text-xs text-muted-foreground">{stat.label}</p>
+                    </div>
                   </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Portrait */}
+            <div className="hidden lg:block relative opacity-0 animate-fade-up" style={{ animationDelay: "400ms" }}>
+              <div className="relative aspect-[4/5] max-w-md mx-auto">
+                <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-primary/30 via-primary/10 to-transparent blur-2xl" />
+                <div className="absolute -inset-1 rounded-[1.75rem] bg-gradient-to-br from-primary/40 to-transparent" />
+                <div className="relative h-full w-full rounded-[1.5rem] overflow-hidden border border-primary/20 glow-border">
+                  <img src={abulePortrait} alt="Abule — founder of Abule Tech" className="h-full w-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+                </div>
+                {/* Floating badge */}
+                <div className="absolute -bottom-4 -left-4 bg-card/90 backdrop-blur-xl border border-border/60 rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3">
+                  <div className="h-2.5 w-2.5 rounded-full bg-primary animate-pulse" />
                   <div>
-                    <p className="text-xl font-bold">{stat.value}</p>
-                    <p className="text-xs text-muted-foreground">{stat.label}</p>
+                    <p className="text-xs font-semibold">Available for work</p>
+                    <p className="text-[10px] text-muted-foreground">Let's build together</p>
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </div>

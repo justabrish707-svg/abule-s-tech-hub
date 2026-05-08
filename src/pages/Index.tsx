@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Shield, Globe, Code2, Zap, BookOpen, Rocket, Send, Phone, Mail } from "lucide-react";
+import { ArrowRight, Shield, Globe, Code2, Zap, BookOpen, Rocket, Send, Phone, Mail, Quote, Star, FolderGit2, MessageCircle } from "lucide-react";
 import TypingEffect from "@/components/TypingEffect";
 import BlogCard from "@/components/BlogCard";
 import ProjectCard from "@/components/ProjectCard";
@@ -26,6 +26,24 @@ const socials = [
   { icon: Send, href: "https://t.me/abule_48", label: "Telegram" },
   { icon: Phone, href: "https://wa.me/2510954897133", label: "WhatsApp" },
   { icon: Mail, href: "mailto:abuleman1221@gmail.com", label: "Email" },
+];
+
+const testimonials = [
+  {
+    quote: "Abule turned a messy idea into a clean, production-ready product. Sharp instincts and a real eye for detail.",
+    name: "Daniel T.",
+    role: "Indie Founder",
+  },
+  {
+    quote: "His blog posts on web security are the kind I actually save. Practical, well-explained, and to the point.",
+    name: "Sara M.",
+    role: "Frontend Engineer",
+  },
+  {
+    quote: "Reliable, curious, and a quick learner. Easily one of the strongest junior devs I've worked alongside.",
+    name: "Yonas K.",
+    role: "CS Student & Collaborator",
+  },
 ];
 
 const Index = () => {
@@ -68,14 +86,15 @@ const Index = () => {
               </p>
 
               <div className="flex flex-wrap gap-3 opacity-0 animate-fade-up" style={{ animationDelay: "650ms" }}>
-                <Link to="/blog" className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] transition-all duration-200 active:scale-[0.97]">
-                  Read Blog <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                <Link to="/blog" className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/25 hover:shadow-primary/50 hover:-translate-y-0.5 hover:scale-[1.02] transition-all duration-200 active:scale-[0.97]">
+                  <BookOpen className="h-4 w-4" /> Read Blog <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
-                <Link to="/projects" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-card/50 text-foreground font-semibold text-sm hover:border-primary/30 hover:bg-card transition-all duration-200 active:scale-[0.97]">
-                  View Projects
+                <Link to="/projects" className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-card/50 text-foreground font-semibold text-sm hover:border-primary/40 hover:bg-card hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.97]">
+                  <FolderGit2 className="h-4 w-4 text-primary" /> View Projects
                 </Link>
-                <Link to="/contact" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-muted-foreground font-medium text-sm hover:text-foreground transition-colors">
-                  Get in Touch
+                <Link to="/contact" className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl text-muted-foreground font-medium text-sm hover:text-primary transition-colors">
+                  <MessageCircle className="h-4 w-4" /> Get in Touch
+                  <ArrowRight className="h-3.5 w-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                 </Link>
               </div>
 
@@ -182,6 +201,55 @@ const Index = () => {
                     <p className="text-sm text-muted-foreground leading-relaxed">{skill.desc}</p>
                   </div>
                 </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="py-20 border-t border-border/30 relative">
+        <div className="absolute inset-0 hero-gradient opacity-50" />
+        <div className="container max-w-lg relative">
+          <ScrollReveal>
+            <NewsletterSignup />
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-24 border-t border-border/30 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent" />
+        <div className="pointer-events-none absolute -top-20 left-1/3 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+        <div className="container relative">
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <p className="text-sm font-medium text-primary mb-2">Kind Words</p>
+              <h2 className="text-3xl font-bold mb-3">What People Say</h2>
+              <p className="text-muted-foreground max-w-md mx-auto">A few notes from collaborators, readers, and folks I've worked with.</p>
+            </div>
+          </ScrollReveal>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+            {testimonials.map((t, i) => (
+              <ScrollReveal key={t.name} delay={i * 100}>
+                <figure className="group relative h-full rounded-2xl border border-border/50 bg-card p-6 card-hover overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <Quote className="h-6 w-6 text-primary/50 mb-3" />
+                  <blockquote className="relative text-sm text-foreground/90 leading-relaxed mb-5">
+                    "{t.quote}"
+                  </blockquote>
+                  <div className="relative flex items-center justify-between">
+                    <figcaption>
+                      <p className="text-sm font-semibold">{t.name}</p>
+                      <p className="text-xs text-muted-foreground">{t.role}</p>
+                    </figcaption>
+                    <div className="flex gap-0.5">
+                      {Array.from({ length: 5 }).map((_, idx) => (
+                        <Star key={idx} className="h-3.5 w-3.5 fill-primary text-primary" />
+                      ))}
+                    </div>
+                  </div>
+                </figure>
               </ScrollReveal>
             ))}
           </div>

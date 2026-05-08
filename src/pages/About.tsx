@@ -26,7 +26,7 @@ const About = () => (
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> Arba Minch, Ethiopia</span>
               <span className="inline-flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5" /> CS Student</span>
-              <span className="inline-flex items-center gap-1.5"><Coffee className="h-3.5 w-3.5" /> Powered by caffeine</span>
+              <span className="inline-flex items-center gap-1.5"><Coffee className="h-3.5 w-3.5" /> Powered by Abule</span>
             </div>
             <div className="flex gap-2 mt-5">
               {socials.map(({ icon: Icon, href, label }) => (
@@ -52,7 +52,7 @@ const About = () => (
       <ScrollReveal delay={80}>
         <div className="space-y-5 text-muted-foreground leading-relaxed mb-14 text-base">
           <p>
-            Hey! I'm <span className="text-foreground font-semibold">Abule</span>, a computer science
+            Hey! I'm <span className="text-foreground font-semibold">Abraham Admasu (Abule)</span>, a computer science
             student at <span className="text-foreground font-semibold">Arba Minch University</span>.
             I'm passionate about building things with code and understanding how systems work — and break.
           </p>

@@ -72,7 +72,7 @@ const Footer = () => (
         </div>
       </div>
       <div className="mt-12 pt-6 border-t border-border/30 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Abule Tech. Built with passion and caffeine.
+        © {new Date().getFullYear()} Abule Tech. Built with passion by Abule.
       </div>
     </div>
   </footer>

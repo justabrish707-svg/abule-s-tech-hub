@@ -71,9 +71,9 @@ const Index = () => {
               </div>
 
               <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-5 opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
-                Hi, I'm <span className="text-gradient">Abule</span>
+                Hi, I'm <span className="text-gradient">Abraham Admasu</span>
                 <br />
-                <span className="text-muted-foreground text-3xl sm:text-4xl md:text-5xl font-bold">I build things for the web</span>
+                <span className="text-muted-foreground text-3xl sm:text-4xl md:text-5xl font-bold">aka Abule — I build for the web</span>
               </h1>
 
               <div className="text-lg sm:text-xl h-8 mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "350ms" }}>

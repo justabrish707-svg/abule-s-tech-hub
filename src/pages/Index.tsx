@@ -62,64 +62,63 @@ const Index = () => {
         <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-primary/20 blur-3xl animate-[float_8s_ease-in-out_infinite]" />
         <div className="pointer-events-none absolute bottom-0 right-10 h-96 w-96 rounded-full bg-primary-glow/10 blur-3xl animate-[float_11s_ease-in-out_infinite]" />
 
-        <div className="container py-20 relative">
-          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-xs font-medium text-primary mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "100ms" }}>
+        <div className="container py-16 sm:py-20 relative">
+          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 sm:gap-12 items-center">
+            <div className="max-w-3xl text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-xs font-medium text-primary mb-5 sm:mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "100ms" }}>
                 <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                 Open to opportunities
               </div>
 
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.02] mb-5 opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
+              <h1 className="text-[2.5rem] leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 sm:mb-5 opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
                 Hi, I'm{" "}
                 <span className="relative inline-block">
                   <span className="text-gradient">Abraham</span>
-                  <span className="pointer-events-none absolute -bottom-1 left-0 right-0 h-[6px] bg-gradient-to-r from-primary/60 via-primary-glow/40 to-transparent blur-[2px] rounded-full" />
+                  <span aria-hidden className="pointer-events-none absolute -bottom-1.5 left-0 right-0 h-[6px] bg-gradient-to-r from-primary/70 via-primary-glow/40 to-transparent blur-[3px] rounded-full" />
+                  <span aria-hidden className="pointer-events-none absolute -bottom-1 left-0 h-[2px] w-2/3 bg-gradient-to-r from-primary to-transparent rounded-full" />
                 </span>
-                <br />
-                <span className="text-muted-foreground text-3xl sm:text-4xl md:text-5xl font-bold">I build for the web</span>
               </h1>
 
-              <div className="text-lg sm:text-xl h-8 mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "350ms" }}>
+              <div className="text-xl sm:text-2xl md:text-3xl font-semibold text-muted-foreground min-h-[2.25rem] sm:min-h-[2.5rem] mb-5 sm:mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "350ms" }}>
                 <TypingEffect />
               </div>
 
-              <p className="text-muted-foreground max-w-xl mb-8 text-base leading-relaxed opacity-0 animate-fade-up" style={{ animationDelay: "500ms" }}>
+              <p className="text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-7 sm:mb-8 text-sm sm:text-base leading-relaxed opacity-0 animate-fade-up" style={{ animationDelay: "500ms" }}>
                 Computer science student sharing my journey in tech, coding, and cybersecurity.
                 I believe in learning by building and teaching what I learn.
               </p>
 
-              <div className="flex flex-wrap gap-3 opacity-0 animate-fade-up" style={{ animationDelay: "650ms" }}>
-                <Link to="/blog" className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/25 hover:shadow-primary/50 hover:-translate-y-0.5 hover:scale-[1.02] transition-all duration-200 active:scale-[0.97]">
-                  <BookOpen className="h-4 w-4" /> Read Blog <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 opacity-0 animate-fade-up" style={{ animationDelay: "650ms" }}>
+                <Link to="/blog" className="group inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 active:scale-[0.97]">
+                  <BookOpen className="h-4 w-4" /> Read Blog <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
-                <Link to="/projects" className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-card/50 text-foreground font-semibold text-sm hover:border-primary/40 hover:bg-card hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.97]">
+                <Link to="/projects" className="group inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl border border-border bg-card/50 backdrop-blur-sm text-foreground font-semibold text-sm hover:border-primary/50 hover:bg-card hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 active:scale-[0.97]">
                   <FolderGit2 className="h-4 w-4 text-primary" /> View Projects
                 </Link>
-                <Link to="/contact" className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl text-muted-foreground font-medium text-sm hover:text-primary transition-colors">
+                <Link to="/contact" className="group inline-flex items-center gap-2 px-4 sm:px-5 py-3 rounded-xl text-muted-foreground font-medium text-sm hover:text-primary transition-colors">
                   <MessageCircle className="h-4 w-4" /> Get in Touch
-                  <ArrowRight className="h-3.5 w-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  <ArrowRight className="h-3.5 w-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                 </Link>
               </div>
 
               {/* Social links */}
-              <div className="flex items-center gap-2 mt-6 opacity-0 animate-fade-up" style={{ animationDelay: "750ms" }}>
+              <div className="flex items-center justify-center lg:justify-start gap-2 mt-6 opacity-0 animate-fade-up" style={{ animationDelay: "750ms" }}>
                 {socials.map(({ icon: Icon, href, label }) => (
-                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-xl bg-secondary/80 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all active:scale-95" aria-label={label}>
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-xl bg-secondary/80 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 hover:-translate-y-0.5 transition-all active:scale-95" aria-label={label}>
                     <Icon className="h-4 w-4" />
                   </a>
                 ))}
               </div>
 
               {/* Quick stats */}
-              <div className="flex flex-wrap items-center gap-8 mt-10 pt-8 border-t border-border/30 opacity-0 animate-fade-up" style={{ animationDelay: "800ms" }}>
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 sm:gap-8 mt-8 sm:mt-10 pt-6 sm:pt-8 border-t border-border/30 opacity-0 animate-fade-up" style={{ animationDelay: "800ms" }}>
                 {stats.map((stat) => (
                   <div key={stat.label} className="group flex items-center gap-3 cursor-default">
                     <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110 group-hover:rotate-3">
                       <stat.icon className="h-5 w-5 text-primary" />
                     </div>
-                    <div>
-                      <p className="text-xl font-bold text-gradient">{stat.value}</p>
+                    <div className="text-left">
+                      <p className="text-lg sm:text-xl font-bold text-gradient">{stat.value}</p>
                       <p className="text-xs text-muted-foreground">{stat.label}</p>
                     </div>
                   </div>

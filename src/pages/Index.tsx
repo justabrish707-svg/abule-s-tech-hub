@@ -70,10 +70,14 @@ const Index = () => {
                 Open to opportunities
               </div>
 
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-5 opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
-                Hi, I'm <span className="text-gradient">Abraham Admasu</span>
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.02] mb-5 opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
+                Hi, I'm{" "}
+                <span className="relative inline-block">
+                  <span className="text-gradient">Abraham</span>
+                  <span className="pointer-events-none absolute -bottom-1 left-0 right-0 h-[6px] bg-gradient-to-r from-primary/60 via-primary-glow/40 to-transparent blur-[2px] rounded-full" />
+                </span>
                 <br />
-                <span className="text-muted-foreground text-3xl sm:text-4xl md:text-5xl font-bold">aka Abule — I build for the web</span>
+                <span className="text-muted-foreground text-3xl sm:text-4xl md:text-5xl font-bold">I build for the web</span>
               </h1>
 
               <div className="text-lg sm:text-xl h-8 mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "350ms" }}>

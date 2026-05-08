@@ -217,9 +217,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Projects Preview */}
-      <section className="py-24 border-t border-border/30">
-        <div className="container">
       {/* Testimonials */}
       <section className="py-24 border-t border-border/30 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent" />
@@ -268,6 +265,10 @@ const Index = () => {
           </ScrollReveal>
         </div>
       </section>
+
+      {/* Projects Preview */}
+      <section className="py-24 border-t border-border/30">
+        <div className="container">
 
       {/* Projects Preview */}
       <section className="py-24 border-t border-border/30">

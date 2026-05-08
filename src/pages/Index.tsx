@@ -220,6 +220,58 @@ const Index = () => {
       {/* Projects Preview */}
       <section className="py-24 border-t border-border/30">
         <div className="container">
+      {/* Testimonials */}
+      <section className="py-24 border-t border-border/30 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent" />
+        <div className="pointer-events-none absolute -top-20 left-1/3 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+        <div className="container relative">
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <p className="text-sm font-medium text-primary mb-2">Kind Words</p>
+              <h2 className="text-3xl font-bold mb-3">What People Say</h2>
+              <p className="text-muted-foreground max-w-md mx-auto">A few notes from collaborators, readers, and folks I've worked with.</p>
+            </div>
+          </ScrollReveal>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+            {testimonials.map((t, i) => (
+              <ScrollReveal key={t.name} delay={i * 100}>
+                <figure className="group relative h-full rounded-2xl border border-border/50 bg-card p-6 card-hover overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <Quote className="h-6 w-6 text-primary/50 mb-3" />
+                  <blockquote className="relative text-sm text-foreground/90 leading-relaxed mb-5">
+                    "{t.quote}"
+                  </blockquote>
+                  <div className="relative flex items-center justify-between">
+                    <figcaption>
+                      <p className="text-sm font-semibold">{t.name}</p>
+                      <p className="text-xs text-muted-foreground">{t.role}</p>
+                    </figcaption>
+                    <div className="flex gap-0.5">
+                      {Array.from({ length: 5 }).map((_, idx) => (
+                        <Star key={idx} className="h-3.5 w-3.5 fill-primary text-primary" />
+                      ))}
+                    </div>
+                  </div>
+                </figure>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="py-20 border-t border-border/30 relative">
+        <div className="absolute inset-0 hero-gradient opacity-50" />
+        <div className="container max-w-lg relative">
+          <ScrollReveal>
+            <NewsletterSignup />
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Projects Preview */}
+      <section className="py-24 border-t border-border/30">
+        <div className="container">
           <ScrollReveal>
             <div className="flex items-end justify-between mb-10">
               <div>

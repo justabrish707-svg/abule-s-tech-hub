@@ -269,10 +269,6 @@ const Index = () => {
       {/* Projects Preview */}
       <section className="py-24 border-t border-border/30">
         <div className="container">
-
-      {/* Projects Preview */}
-      <section className="py-24 border-t border-border/30">
-        <div className="container">
           <ScrollReveal>
             <div className="flex items-end justify-between mb-10">
               <div>

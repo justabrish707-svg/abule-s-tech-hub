@@ -80,7 +80,7 @@ const Index = () => {
               </h1>
 
               <div className="text-xl sm:text-2xl md:text-3xl font-semibold text-muted-foreground min-h-[2.25rem] sm:min-h-[2.5rem] mb-5 sm:mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "350ms" }}>
-                <TypingEffect />
+                <TypingEffect typingSpeed={70} deletingSpeed={32} pauseDuration={2000} cursorStyle="bar" />
               </div>
 
               <p className="text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-7 sm:mb-8 text-sm sm:text-base leading-relaxed opacity-0 animate-fade-up" style={{ animationDelay: "500ms" }}>
@@ -88,14 +88,14 @@ const Index = () => {
                 I believe in learning by building and teaching what I learn.
               </p>
 
-              <div className="flex flex-wrap justify-center lg:justify-start gap-3 opacity-0 animate-fade-up" style={{ animationDelay: "650ms" }}>
-                <Link to="/blog" className="group inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 active:scale-[0.97]">
+              <div className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-3 opacity-0 animate-fade-up" style={{ animationDelay: "650ms" }}>
+                <Link to="/blog" className="focus-ring group inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 active:scale-[0.97]">
                   <BookOpen className="h-4 w-4" /> Read Blog <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
-                <Link to="/projects" className="group inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl border border-border bg-card/50 backdrop-blur-sm text-foreground font-semibold text-sm hover:border-primary/50 hover:bg-card hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 active:scale-[0.97]">
+                <Link to="/projects" className="focus-ring group inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 rounded-xl border border-border bg-card/50 backdrop-blur-sm text-foreground font-semibold text-sm hover:border-primary/50 hover:bg-card hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 active:scale-[0.97]">
                   <FolderGit2 className="h-4 w-4 text-primary" /> View Projects
                 </Link>
-                <Link to="/contact" className="group inline-flex items-center gap-2 px-4 sm:px-5 py-3 rounded-xl text-muted-foreground font-medium text-sm hover:text-primary transition-colors">
+                <Link to="/contact" className="focus-ring group inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-3 rounded-xl text-muted-foreground font-medium text-sm hover:text-primary transition-colors">
                   <MessageCircle className="h-4 w-4" /> Get in Touch
                   <ArrowRight className="h-3.5 w-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                 </Link>
@@ -104,24 +104,9 @@ const Index = () => {
               {/* Social links */}
               <div className="flex items-center justify-center lg:justify-start gap-2 mt-6 opacity-0 animate-fade-up" style={{ animationDelay: "750ms" }}>
                 {socials.map(({ icon: Icon, href, label }) => (
-                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-xl bg-secondary/80 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 hover:-translate-y-0.5 transition-all active:scale-95" aria-label={label}>
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="focus-ring h-10 w-10 rounded-xl bg-secondary/80 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 hover:-translate-y-0.5 transition-all active:scale-95" aria-label={label}>
                     <Icon className="h-4 w-4" />
                   </a>
-                ))}
-              </div>
-
-              {/* Quick stats */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 sm:gap-8 mt-8 sm:mt-10 pt-6 sm:pt-8 border-t border-border/30 opacity-0 animate-fade-up" style={{ animationDelay: "800ms" }}>
-                {stats.map((stat) => (
-                  <div key={stat.label} className="group flex items-center gap-3 cursor-default">
-                    <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110 group-hover:rotate-3">
-                      <stat.icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="text-left">
-                      <p className="text-lg sm:text-xl font-bold text-gradient">{stat.value}</p>
-                      <p className="text-xs text-muted-foreground">{stat.label}</p>
-                    </div>
-                  </div>
                 ))}
               </div>
             </div>

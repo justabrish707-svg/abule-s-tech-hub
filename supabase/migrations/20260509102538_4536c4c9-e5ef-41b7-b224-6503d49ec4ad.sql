@@ -1,0 +1,10 @@
+CREATE INDEX IF NOT EXISTS idx_comments_post_id ON public.comments(post_id);
+CREATE INDEX IF NOT EXISTS idx_comments_parent_id ON public.comments(parent_id);
+CREATE INDEX IF NOT EXISTS idx_comments_user_id ON public.comments(user_id);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_date ON public.blog_posts(date DESC);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_category ON public.blog_posts(category);
+CREATE INDEX IF NOT EXISTS idx_contact_messages_created_at ON public.contact_messages(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_contact_messages_is_read ON public.contact_messages(is_read);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_newsletter_email_unique ON public.newsletter_subscribers(email);
+CREATE INDEX IF NOT EXISTS idx_user_roles_user_id ON public.user_roles(user_id);
+CREATE INDEX IF NOT EXISTS idx_projects_display_order ON public.projects(display_order);

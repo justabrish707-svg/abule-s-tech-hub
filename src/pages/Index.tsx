@@ -112,8 +112,8 @@ const Index = () => {
             </div>
 
             {/* Portrait */}
-            <div className="hidden lg:block relative opacity-0 animate-fade-up" style={{ animationDelay: "400ms" }}>
-              <div className="relative aspect-[4/5] max-w-md mx-auto group">
+            <div className="relative opacity-0 animate-fade-up order-first lg:order-none mx-auto lg:mx-0 max-w-[240px] sm:max-w-xs lg:max-w-md w-full" style={{ animationDelay: "400ms" }}>
+              <div className="relative aspect-[4/5] mx-auto group">
                 <div className="absolute -inset-6 rounded-[2.25rem] bg-gradient-to-br from-primary/40 via-primary/10 to-transparent blur-3xl animate-[pulse-glow_4s_ease-in-out_infinite]" />
                 <div className="absolute -inset-1 rounded-[1.75rem] bg-gradient-to-br from-primary/50 via-primary-glow/30 to-transparent" />
                 <div className="relative h-full w-full rounded-[1.5rem] overflow-hidden border border-primary/20 glow-border transition-transform duration-700 group-hover:scale-[1.02]">

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Clock } from "lucide-react";
 import type { BlogPost } from "@/hooks/useBlogPosts";
+import { supabaseImage } from "@/lib/image";
 
 const BlogCard = ({ post }: { post: BlogPost }) => (
   <Link

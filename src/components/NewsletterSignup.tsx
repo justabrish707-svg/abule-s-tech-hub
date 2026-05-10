@@ -32,9 +32,10 @@ const NewsletterSignup = ({ compact = false }: { compact?: boolean }) => {
         <button
           type="submit"
           disabled={subscribe.isPending}
+          aria-label="Subscribe to newsletter"
           className="h-9 w-9 rounded-lg bg-primary text-primary-foreground flex items-center justify-center hover:scale-105 transition-all active:scale-95 disabled:opacity-50"
         >
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </button>
       </form>
     );

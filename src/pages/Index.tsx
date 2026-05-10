@@ -54,7 +54,7 @@ const Index = () => {
     <main className="pt-16">
       {/* Hero */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-        <img src={heroBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-40" width={1920} height={1080} />
+        <img src={heroBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-40" width={1920} height={1080} fetchPriority="high" decoding="async" />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/40" />
         <div className="absolute inset-0 hero-gradient" />
         <div className="absolute inset-0 grid-pattern opacity-[0.07]" />

@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -6,22 +7,23 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import Index from "./pages/Index";
 
 const AnalyticsTracker = () => {
   useAnalytics();
   return null;
 };
-import Index from "./pages/Index";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
-import Projects from "./pages/Projects";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Auth from "./pages/Auth";
-import Profile from "./pages/Profile";
-import Admin from "./pages/Admin";
-import ResetPassword from "./pages/ResetPassword";
-import NotFound from "./pages/NotFound";
+
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const Projects = lazy(() => import("./pages/Projects"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Admin = lazy(() => import("./pages/Admin"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
@@ -33,19 +35,21 @@ const App = () => (
         <AuthProvider>
           <AnalyticsTracker />
           <Navbar />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:id" element={<BlogPost />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense fallback={null}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogPost />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
           <Footer />
         </AuthProvider>
       </BrowserRouter>

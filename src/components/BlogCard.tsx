@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Clock } from "lucide-react";
 import type { BlogPost } from "@/hooks/useBlogPosts";
+import { supabaseImage } from "@/lib/image";
 
 const BlogCard = ({ post }: { post: BlogPost }) => (
   <Link
@@ -11,10 +12,13 @@ const BlogCard = ({ post }: { post: BlogPost }) => (
     {post.cover_image && (
       <div className="relative h-44 overflow-hidden">
         <img
-          src={post.cover_image}
+          src={supabaseImage(post.cover_image, { width: 800, quality: 72 })}
+          srcSet={`${supabaseImage(post.cover_image, { width: 480, quality: 72 })} 480w, ${supabaseImage(post.cover_image, { width: 800, quality: 72 })} 800w, ${supabaseImage(post.cover_image, { width: 1200, quality: 72 })} 1200w`}
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
           alt={post.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
       </div>

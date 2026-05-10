@@ -59,14 +59,11 @@ const Auth = () => {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+    await supabase.auth.resetPasswordForEmail(email.trim(), {
       redirectTo: `${window.location.origin}/reset-password`,
     });
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Password reset email sent! Check your inbox.");
-    }
+    // Always show generic success to prevent email enumeration
+    toast.success("If an account exists for this email, a reset link has been sent.");
     setLoading(false);
   };
 

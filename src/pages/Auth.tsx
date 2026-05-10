@@ -59,14 +59,11 @@ const Auth = () => {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+    await supabase.auth.resetPasswordForEmail(email.trim(), {
       redirectTo: `${window.location.origin}/reset-password`,
     });
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Password reset email sent! Check your inbox.");
-    }
+    // Always show generic success to prevent email enumeration
+    toast.success("If an account exists for this email, a reset link has been sent.");
     setLoading(false);
   };
 
@@ -83,7 +80,7 @@ const Auth = () => {
       }
       const { error } = await supabase.auth.signInWithPassword({ email: parsed.data.email, password: parsed.data.password });
       if (error) {
-        toast.error(error.message);
+        toast.error("Invalid email or password.");
       } else {
         toast.success("Welcome back!");
         navigate("/");
@@ -104,7 +101,7 @@ const Auth = () => {
         },
       });
       if (error) {
-        toast.error(error.message);
+        toast.error("Unable to create account. Please check your details and try again.");
       } else {
         toast.success("Check your email to verify your account!");
       }

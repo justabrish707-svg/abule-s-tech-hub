@@ -1,7 +1,7 @@
 import { GraduationCap, Target, Code2, Shield, Globe, MapPin, Calendar, Coffee, Send, Phone, Mail } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import aboutBg from "@/assets/about-bg.jpg";
-import abulePortrait from "@/assets/abule-portrait.png";
+import abulePortrait from "@/assets/abule-portrait.webp";
 
 const socials = [
   { icon: Send, href: "https://t.me/abule_48", label: "Telegram" },

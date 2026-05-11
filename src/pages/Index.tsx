@@ -7,7 +7,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useProjects } from "@/hooks/useProjects";
-import heroBg from "@/assets/hero-bg.webp";
+const heroBg = "/hero-bg.webp";
 import abulePortrait from "@/assets/abule-portrait.webp";
 
 const skills = [

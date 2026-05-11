@@ -12,9 +12,9 @@ const BlogCard = ({ post }: { post: BlogPost }) => (
     {post.cover_image && (
       <div className="relative h-44 overflow-hidden">
         <img
-          src={supabaseImage(post.cover_image, { width: 800, quality: 72 })}
-          srcSet={`${supabaseImage(post.cover_image, { width: 480, quality: 72 })} 480w, ${supabaseImage(post.cover_image, { width: 800, quality: 72 })} 800w, ${supabaseImage(post.cover_image, { width: 1200, quality: 72 })} 1200w`}
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
+          src={supabaseImage(post.cover_image, { width: 600, quality: 55 })}
+          srcSet={`${supabaseImage(post.cover_image, { width: 400, quality: 55 })} 400w, ${supabaseImage(post.cover_image, { width: 600, quality: 55 })} 600w, ${supabaseImage(post.cover_image, { width: 900, quality: 55 })} 900w`}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
           alt={post.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           loading="lazy"

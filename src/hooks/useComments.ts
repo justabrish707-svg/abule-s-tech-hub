@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
+import { commentSchema } from "@/lib/validation";
 
 export interface Comment {
   id: string;
@@ -61,11 +62,12 @@ export const useAddComment = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ postId, content, parentId, userId }: { postId: string; content: string; parentId?: string; userId: string }) => {
+      const parsed = commentSchema.parse({ content });
       const { error } = await supabase.from("comments").insert({
         post_id: postId,
         user_id: userId,
         parent_id: parentId || null,
-        content: content.trim(),
+        content: parsed.content,
       });
       if (error) throw error;
     },

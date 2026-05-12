@@ -445,8 +445,26 @@ const Admin = () => {
                           postId={editingPost.id || undefined}
                         />
                         <div>
-                          <label className="flex items-center gap-2 text-sm font-medium mb-2 text-muted-foreground"><FileText className="h-3.5 w-3.5" /> Content <span className="text-xs text-muted-foreground/60 font-normal ml-1">Markdown supported</span></label>
+                          <label className="flex items-center gap-2 text-sm font-medium mb-2 text-muted-foreground"><FileText className="h-3.5 w-3.5" /> Content <span className="text-xs text-muted-foreground/60 font-normal ml-1">Markdown · tables · math ($x^2$, $$...$$) · images</span></label>
                           <textarea value={editingPost.content} onChange={(e) => setEditingPost({ ...editingPost, content: e.target.value })} placeholder="Write your post content here..." rows={18} className="w-full px-4 py-3 rounded-xl border border-border/50 bg-secondary/50 text-sm text-foreground font-mono leading-relaxed placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-y" />
+                          {(() => {
+                            const issues = validateMarkdown(editingPost.content || "");
+                            if (issues.length === 0) return null;
+                            return (
+                              <div className="mt-3 rounded-lg border border-border/50 bg-secondary/30 p-3 space-y-1.5">
+                                <p className="text-xs font-semibold text-muted-foreground mb-1">Markdown checks ({issues.length})</p>
+                                {issues.slice(0, 6).map((iss, idx) => (
+                                  <div key={idx} className="flex items-start gap-2 text-xs">
+                                    {iss.level === "error"
+                                      ? <AlertCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
+                                      : <AlertTriangle className="h-3.5 w-3.5 text-amber-400 shrink-0 mt-0.5" />}
+                                    <span className="text-muted-foreground"><span className="font-mono text-foreground/70">L{iss.line}</span> · {iss.message}</span>
+                                  </div>
+                                ))}
+                                {issues.length > 6 && <p className="text-[11px] text-muted-foreground/60">+ {issues.length - 6} more…</p>}
+                              </div>
+                            );
+                          })()}
                         </div>
                         <div className="flex items-center justify-between pt-4 border-t border-border/30">
                           <p className="text-xs text-muted-foreground/60">{editingPost.content.length} chars · ~{Math.ceil(editingPost.content.split(/\s+/).filter(Boolean).length / 200)} min</p>

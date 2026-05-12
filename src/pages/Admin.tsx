@@ -16,6 +16,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import ScrollReveal from "@/components/ScrollReveal";
+import MarkdownRenderer from "@/components/MarkdownRenderer";
+import { validateMarkdown } from "@/lib/markdownValidation";
+import { AlertTriangle, AlertCircle } from "lucide-react";
 
 type Tab = "overview" | "posts" | "projects" | "messages" | "subscribers";
 
@@ -409,7 +412,10 @@ const Admin = () => {
                         <div className="px-3 py-1 inline-block rounded-full bg-primary/10 text-primary text-xs font-medium">{editingPost.category}</div>
                         <h3 className="text-3xl font-bold tracking-tight">{editingPost.title || "Untitled"}</h3>
                         <p className="text-muted-foreground text-lg leading-relaxed">{editingPost.excerpt}</p>
-                        <div className="pt-6 border-t border-border/30 whitespace-pre-wrap text-sm text-muted-foreground leading-relaxed font-mono">{editingPost.content}</div>
+                        <MarkdownRenderer
+                          content={editingPost.content || "_Nothing to preview yet._"}
+                          className="pt-6 border-t border-border/30 prose prose-invert max-w-none prose-headings:font-bold prose-headings:text-foreground prose-p:text-foreground/85 prose-a:text-primary prose-strong:text-foreground prose-code:text-primary prose-code:bg-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-blockquote:border-l-primary"
+                        />
                       </div>
                     ) : (
                       <div className="space-y-5 animate-fade-in">

@@ -16,6 +16,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import ScrollReveal from "@/components/ScrollReveal";
+import MarkdownRenderer from "@/components/MarkdownRenderer";
+import { validateMarkdown } from "@/lib/markdownValidation";
+import { AlertTriangle, AlertCircle } from "lucide-react";
 
 type Tab = "overview" | "posts" | "projects" | "messages" | "subscribers";
 
@@ -409,7 +412,10 @@ const Admin = () => {
                         <div className="px-3 py-1 inline-block rounded-full bg-primary/10 text-primary text-xs font-medium">{editingPost.category}</div>
                         <h3 className="text-3xl font-bold tracking-tight">{editingPost.title || "Untitled"}</h3>
                         <p className="text-muted-foreground text-lg leading-relaxed">{editingPost.excerpt}</p>
-                        <div className="pt-6 border-t border-border/30 whitespace-pre-wrap text-sm text-muted-foreground leading-relaxed font-mono">{editingPost.content}</div>
+                        <MarkdownRenderer
+                          content={editingPost.content || "_Nothing to preview yet._"}
+                          className="pt-6 border-t border-border/30 prose prose-invert max-w-none prose-headings:font-bold prose-headings:text-foreground prose-p:text-foreground/85 prose-a:text-primary prose-strong:text-foreground prose-code:text-primary prose-code:bg-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-blockquote:border-l-primary"
+                        />
                       </div>
                     ) : (
                       <div className="space-y-5 animate-fade-in">
@@ -439,8 +445,26 @@ const Admin = () => {
                           postId={editingPost.id || undefined}
                         />
                         <div>
-                          <label className="flex items-center gap-2 text-sm font-medium mb-2 text-muted-foreground"><FileText className="h-3.5 w-3.5" /> Content <span className="text-xs text-muted-foreground/60 font-normal ml-1">Markdown supported</span></label>
+                          <label className="flex items-center gap-2 text-sm font-medium mb-2 text-muted-foreground"><FileText className="h-3.5 w-3.5" /> Content <span className="text-xs text-muted-foreground/60 font-normal ml-1">Markdown · tables · math ($x^2$, $$...$$) · images</span></label>
                           <textarea value={editingPost.content} onChange={(e) => setEditingPost({ ...editingPost, content: e.target.value })} placeholder="Write your post content here..." rows={18} className="w-full px-4 py-3 rounded-xl border border-border/50 bg-secondary/50 text-sm text-foreground font-mono leading-relaxed placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-y" />
+                          {(() => {
+                            const issues = validateMarkdown(editingPost.content || "");
+                            if (issues.length === 0) return null;
+                            return (
+                              <div className="mt-3 rounded-lg border border-border/50 bg-secondary/30 p-3 space-y-1.5">
+                                <p className="text-xs font-semibold text-muted-foreground mb-1">Markdown checks ({issues.length})</p>
+                                {issues.slice(0, 6).map((iss, idx) => (
+                                  <div key={idx} className="flex items-start gap-2 text-xs">
+                                    {iss.level === "error"
+                                      ? <AlertCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
+                                      : <AlertTriangle className="h-3.5 w-3.5 text-amber-400 shrink-0 mt-0.5" />}
+                                    <span className="text-muted-foreground"><span className="font-mono text-foreground/70">L{iss.line}</span> · {iss.message}</span>
+                                  </div>
+                                ))}
+                                {issues.length > 6 && <p className="text-[11px] text-muted-foreground/60">+ {issues.length - 6} more…</p>}
+                              </div>
+                            );
+                          })()}
                         </div>
                         <div className="flex items-center justify-between pt-4 border-t border-border/30">
                           <p className="text-xs text-muted-foreground/60">{editingPost.content.length} chars · ~{Math.ceil(editingPost.content.split(/\s+/).filter(Boolean).length / 200)} min</p>

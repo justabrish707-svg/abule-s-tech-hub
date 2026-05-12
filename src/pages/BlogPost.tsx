@@ -1,14 +1,15 @@
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Clock, Calendar } from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import ScrollReveal from "@/components/ScrollReveal";
 import { useBlogPost } from "@/hooks/useBlogPosts";
 import CommentSection from "@/components/CommentSection";
+import MarkdownRenderer from "@/components/MarkdownRenderer";
+import BlogReaderToolbar, { useReaderPrefs } from "@/components/BlogReaderToolbar";
 
 const BlogPost = () => {
   const { id } = useParams();
   const { data: post, isLoading } = useBlogPost(id);
+  const [prefs, setPrefs, resetPrefs] = useReaderPrefs();
 
   if (isLoading) {
     return (
@@ -61,16 +62,24 @@ const BlogPost = () => {
           </div>
           {post.cover_image && (
             <div className="rounded-2xl overflow-hidden border border-border/50 mb-10">
-              <img src={post.cover_image} alt={post.title} className="w-full h-64 sm:h-80 object-cover" />
+              <img src={post.cover_image} alt={post.title} loading="eager" decoding="async" className="w-full h-64 sm:h-80 object-cover" />
             </div>
           )}
           {!post.cover_image && <div className="mb-10" />}
         </ScrollReveal>
 
+        <BlogReaderToolbar prefs={prefs} onChange={setPrefs} onReset={resetPrefs} />
+
         <ScrollReveal delay={160}>
-          <div className="prose prose-invert max-w-none prose-headings:font-bold prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3 prose-h3:text-lg prose-p:text-muted-foreground prose-p:leading-relaxed prose-strong:text-foreground prose-a:text-primary hover:prose-a:underline prose-li:text-muted-foreground prose-code:text-primary prose-code:bg-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-pre:bg-card prose-pre:border prose-pre:border-border/50 prose-pre:rounded-lg prose-img:rounded-lg prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground prose-table:text-sm prose-th:border prose-th:border-border prose-th:bg-secondary prose-th:px-3 prose-th:py-2 prose-th:text-left prose-td:border prose-td:border-border prose-td:px-3 prose-td:py-2 prose-hr:border-border/50">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
-          </div>
+          <MarkdownRenderer
+            content={post.content}
+            className="prose prose-invert max-w-none prose-headings:font-bold prose-headings:text-foreground prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-p:text-foreground/85 prose-strong:text-foreground prose-a:text-primary prose-li:text-foreground/85 prose-code:text-primary prose-code:bg-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[0.85em] prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground prose-blockquote:not-italic prose-hr:border-border/50"
+            // styling overrides via inline style for reader prefs
+          />
+          <style>{`
+            article .prose { font-size: ${prefs.fontSize}px; line-height: ${prefs.lineHeight}; }
+            article .prose p, article .prose li { line-height: ${prefs.lineHeight}; }
+          `}</style>
         </ScrollReveal>
 
         <CommentSection postId={post.id} />

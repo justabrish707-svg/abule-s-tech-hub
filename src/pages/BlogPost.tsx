@@ -68,7 +68,9 @@ const BlogPost = () => {
         </ScrollReveal>
 
         <ScrollReveal delay={160}>
-          <div className="prose-custom">{renderContent(post.content)}</div>
+          <div className="prose prose-invert max-w-none prose-headings:font-bold prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3 prose-h3:text-lg prose-p:text-muted-foreground prose-p:leading-relaxed prose-strong:text-foreground prose-a:text-primary hover:prose-a:underline prose-li:text-muted-foreground prose-code:text-primary prose-code:bg-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-pre:bg-card prose-pre:border prose-pre:border-border/50 prose-pre:rounded-lg prose-img:rounded-lg prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground prose-table:text-sm prose-th:border prose-th:border-border prose-th:bg-secondary prose-th:px-3 prose-th:py-2 prose-th:text-left prose-td:border prose-td:border-border prose-td:px-3 prose-td:py-2 prose-hr:border-border/50">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
+          </div>
         </ScrollReveal>
 
         <CommentSection postId={post.id} />

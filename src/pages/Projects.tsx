@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useProjects } from "@/hooks/useProjects";
 import ProjectCard from "@/components/ProjectCard";
 import ScrollReveal from "@/components/ScrollReveal";
+import SEO from "@/components/SEO";
 
 const statusFilters = ["All", "completed", "in-progress", "planned"];
 
@@ -13,6 +14,17 @@ const Projects = () => {
 
   return (
     <main className="pt-16">
+      <SEO
+        title="Projects — Portfolio of Web Apps & Tools | Abule Tech"
+        description="Selected projects by Abraham Admasu: responsive websites, full-stack apps, and cybersecurity tools built with React, TypeScript, and modern web tech."
+        path="/projects"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Projects — Abule Tech",
+          url: "https://abule-tech.lovable.app/projects",
+        }}
+      />
       {/* Header */}
       <section className="relative overflow-hidden border-b border-border/30">
         <div className="absolute inset-0 hero-gradient" />

@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import BlogCard from "@/components/BlogCard";
 import ScrollReveal from "@/components/ScrollReveal";
+import SEO from "@/components/SEO";
 import { useBlogPosts, useBlogCategories } from "@/hooks/useBlogPosts";
 
 const Blog = () => {
@@ -23,6 +24,11 @@ const Blog = () => {
 
   return (
     <main className="pt-16">
+      <SEO
+        title="Blog — Tutorials on Web Dev & Cybersecurity | Abule Tech"
+        description="Beginner-friendly tutorials and guides on HTML, CSS, JavaScript, React, programming, and cybersecurity by Abraham Admasu."
+        path="/blog"
+      />
       {/* Header */}
       <section className="relative overflow-hidden border-b border-border/30">
         <div className="absolute inset-0 hero-gradient" />

@@ -1,5 +1,6 @@
 import { GraduationCap, Target, Code2, Shield, Globe, MapPin, Calendar, Coffee, Send, Phone, Mail } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
+import SEO from "@/components/SEO";
 import aboutBg from "@/assets/about-bg.jpg";
 import abulePortrait from "@/assets/abule-portrait.webp";
 

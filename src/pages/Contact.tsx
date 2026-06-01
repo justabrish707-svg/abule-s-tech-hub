@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Send, MessageSquare, Mail, MapPin, Phone } from "lucide-react";
 import { toast } from "sonner";
 import ScrollReveal from "@/components/ScrollReveal";
+import SEO from "@/components/SEO";
 import { useSendContactMessage } from "@/hooks/useContactMessages";
 import contactBg from "@/assets/contact-bg.jpg";
 
@@ -48,6 +49,11 @@ const Contact = () => {
 
   return (
     <main className="pt-16">
+      <SEO
+        title="Contact — Get in Touch with Abraham Admasu | Abule Tech"
+        description="Reach out to Abraham Admasu for collaboration, questions, or feedback. Connect via email, Telegram, WhatsApp, Instagram, or TikTok."
+        path="/contact"
+      />
       {/* Header */}
       <section className="relative overflow-hidden border-b border-border/30">
         <img src={contactBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-30" loading="lazy" width={1920} height={768} />

@@ -144,7 +144,7 @@ const Index = () => {
                 <div className="absolute -inset-6 rounded-[2.25rem] bg-gradient-to-br from-primary/40 via-primary/10 to-transparent blur-3xl animate-[pulse-glow_4s_ease-in-out_infinite]" />
                 <div className="absolute -inset-1 rounded-[1.75rem] bg-gradient-to-br from-primary/50 via-primary-glow/30 to-transparent" />
                 <div className="relative h-full w-full rounded-[1.5rem] overflow-hidden border border-primary/20 glow-border transition-transform duration-700 group-hover:scale-[1.02]">
-                  <img src={abulePortrait} alt="Abule — founder of Abule Tech" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img src={abulePortrait} alt="Abraham Admasu portrait — founder of Abule Tech" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
                   {/* Subtle scanline shimmer */}
                   <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(110deg,transparent_40%,hsl(var(--primary)/0.12)_50%,transparent_60%)] bg-[length:250%_100%] animate-[shimmer_4s_linear_infinite]" />

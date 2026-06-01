@@ -127,7 +127,7 @@ const Profile = () => {
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
-                  alt="Avatar"
+                  alt="User profile avatar"
                   className="w-full h-full object-cover"
                 />
               ) : (

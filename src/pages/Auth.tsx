@@ -223,7 +223,7 @@ const Auth = () => {
             <div className="hidden lg:block mb-6">
               <h2 className="text-xl font-bold mb-1">
                 {isLogin ? "Sign in to your account" : "Create your account"}
-              </h1>
+              </h2>
               <p className="text-sm text-muted-foreground">
                 {isLogin ? "Enter your credentials to continue" : "Fill in the details below to get started"}
               </p>

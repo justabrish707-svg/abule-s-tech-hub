@@ -221,7 +221,7 @@ const Auth = () => {
           {/* Form card */}
           <div className="rounded-2xl border border-border/40 bg-card/70 backdrop-blur-xl p-8 shadow-2xl shadow-black/10 glow-border">
             <div className="hidden lg:block mb-6">
-              <h1 className="text-xl font-bold mb-1">
+              <h2 className="text-xl font-bold mb-1">
                 {isLogin ? "Sign in to your account" : "Create your account"}
               </h1>
               <p className="text-sm text-muted-foreground">

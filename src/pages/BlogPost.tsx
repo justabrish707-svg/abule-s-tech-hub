@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Clock, Calendar } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
+import SEO from "@/components/SEO";
 import { useBlogPost } from "@/hooks/useBlogPosts";
 import CommentSection from "@/components/CommentSection";
 import MarkdownRenderer from "@/components/MarkdownRenderer";

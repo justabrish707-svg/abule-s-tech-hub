@@ -4,6 +4,7 @@ import TypingEffect from "@/components/TypingEffect";
 import BlogCard from "@/components/BlogCard";
 import ProjectCard from "@/components/ProjectCard";
 import ScrollReveal from "@/components/ScrollReveal";
+import SEO from "@/components/SEO";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useProjects } from "@/hooks/useProjects";
@@ -52,6 +53,32 @@ const Index = () => {
 
   return (
     <main className="pt-16">
+      <SEO
+        title="Abule Tech — Abraham Admasu, CS Student & Developer"
+        description="Personal tech blog by Abraham Admasu — tutorials, projects, and notes on web development, programming, and cybersecurity for self-taught developers."
+        path="/"
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Abule Tech",
+            url: "https://abule-tech.lovable.app/",
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: "Abraham Admasu",
+            url: "https://abule-tech.lovable.app/about",
+            jobTitle: "Computer Science Student & Developer",
+            email: "mailto:abuleman1221@gmail.com",
+            sameAs: [
+              "https://t.me/abule_48",
+              "https://instagram.com/abule_48",
+              "https://tiktok.com/@abulala88",
+            ],
+          },
+        ]}
+      />
       {/* Hero */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
         <img src={heroBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-40" width={1920} height={1080} fetchPriority="high" decoding="async" />

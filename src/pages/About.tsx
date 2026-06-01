@@ -12,6 +12,19 @@ const socials = [
 
 const About = () => (
   <main className="pt-16">
+    <SEO
+      title="About Abraham Admasu — CS Student & Developer | Abule Tech"
+      description="Learn about Abraham Admasu, a computer science student and self-taught developer passionate about web development and cybersecurity."
+      path="/about"
+      jsonLd={{
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: "Abraham Admasu",
+        url: "https://abule-tech.lovable.app/about",
+        jobTitle: "Computer Science Student & Developer",
+        email: "mailto:abuleman1221@gmail.com",
+      }}
+    />
     {/* Hero header */}
     <section className="relative overflow-hidden border-b border-border/30">
       <img src={aboutBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-30" loading="lazy" width={1920} height={768} />

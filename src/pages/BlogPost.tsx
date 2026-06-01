@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Clock, Calendar } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
+import SEO from "@/components/SEO";
 import { useBlogPost } from "@/hooks/useBlogPosts";
 import CommentSection from "@/components/CommentSection";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
@@ -39,6 +40,24 @@ const BlogPost = () => {
 
   return (
     <main className="pt-16">
+      <SEO
+        title={`${post.title} | Abule Tech`}
+        description={post.excerpt}
+        path={`/blog/${post.id}`}
+        ogType="article"
+        image={post.cover_image ?? undefined}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: post.title,
+          description: post.excerpt,
+          datePublished: post.date,
+          dateModified: post.updated_at ?? post.date,
+          author: { "@type": "Person", name: "Abraham Admasu" },
+          image: post.cover_image ?? undefined,
+          mainEntityOfPage: `https://abule-tech.lovable.app/blog/${post.id}`,
+        }}
+      />
       <article className="container max-w-2xl py-16">
         <ScrollReveal>
           <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors mb-8">

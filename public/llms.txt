@@ -1,0 +1,13 @@
+# Abule Tech
+
+> Personal tech blog by Abraham Admasu — tutorials, projects, and thoughts on programming, cybersecurity, and modern web development.
+
+Abule Tech is a learning-in-public hub focused on web development (HTML, CSS, JavaScript, React, TypeScript), cybersecurity fundamentals, and computer science education for beginners and self-taught developers.
+
+## Pages
+
+- [Home](/): Overview of Abraham's work, featured posts, and projects.
+- [Blog](/blog): Tutorials and articles on web development, programming, and cybersecurity.
+- [Projects](/projects): Portfolio of web apps, tools, and experiments.
+- [About](/about): Background, skills, and journey as a CS student and developer.
+- [Contact](/contact): Ways to get in touch for collaboration or questions.

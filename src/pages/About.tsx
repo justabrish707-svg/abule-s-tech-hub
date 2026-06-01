@@ -1,5 +1,6 @@
 import { GraduationCap, Target, Code2, Shield, Globe, MapPin, Calendar, Coffee, Send, Phone, Mail } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
+import SEO from "@/components/SEO";
 import aboutBg from "@/assets/about-bg.jpg";
 import abulePortrait from "@/assets/abule-portrait.webp";
 
@@ -11,6 +12,19 @@ const socials = [
 
 const About = () => (
   <main className="pt-16">
+    <SEO
+      title="About Abraham Admasu — CS Student & Developer | Abule Tech"
+      description="Learn about Abraham Admasu, a computer science student and self-taught developer passionate about web development and cybersecurity."
+      path="/about"
+      jsonLd={{
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: "Abraham Admasu",
+        url: "https://abule-tech.lovable.app/about",
+        jobTitle: "Computer Science Student & Developer",
+        email: "mailto:abuleman1221@gmail.com",
+      }}
+    />
     {/* Hero header */}
     <section className="relative overflow-hidden border-b border-border/30">
       <img src={aboutBg} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-30" loading="lazy" width={1920} height={768} />
@@ -40,7 +54,7 @@ const About = () => (
             <div className="relative w-48 h-48 sm:w-56 sm:h-56 shrink-0">
               <div className="absolute -inset-3 rounded-full bg-gradient-to-br from-primary/40 via-primary/10 to-transparent blur-2xl" />
               <div className="relative h-full w-full rounded-full overflow-hidden border-2 border-primary/30 glow-border">
-                <img src={abulePortrait} alt="Abule" className="h-full w-full object-cover" />
+                <img src={abulePortrait} alt="Abraham Admasu portrait" className="h-full w-full object-cover" />
               </div>
             </div>
           </ScrollReveal>

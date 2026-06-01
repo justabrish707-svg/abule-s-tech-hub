@@ -12,3 +12,9 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /auth
+Disallow: /profile
+Disallow: /reset-password
+
+Sitemap: https://abule-tech.lovable.app/sitemap.xml

@@ -302,6 +302,16 @@ const Admin = () => {
       </div>
 
       <div className="container max-w-6xl py-8">
+        {tab === "overview" && (
+          <div className="mb-6 flex justify-end">
+            <a
+              href="/admin/seo"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg border border-border/60 bg-card text-sm font-medium hover:border-primary/40 hover:text-primary transition-colors"
+            >
+              <BarChart3 className="h-4 w-4" /> SEO audit
+            </a>
+          </div>
+        )}
         {/* Overview Tab */}
         {tab === "overview" && (
           <ScrollReveal>

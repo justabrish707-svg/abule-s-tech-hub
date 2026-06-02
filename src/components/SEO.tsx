@@ -8,10 +8,23 @@ interface SEOProps {
   path: string;
   ogType?: "website" | "article";
   image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  imageType?: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-export const SEO = ({ title, description, path, ogType = "website", image, jsonLd }: SEOProps) => {
+export const SEO = ({
+  title,
+  description,
+  path,
+  ogType = "website",
+  image,
+  imageWidth = 1200,
+  imageHeight = 630,
+  imageType,
+  jsonLd,
+}: SEOProps) => {
   const url = `${SITE_URL}${path}`;
   const ldArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
@@ -24,7 +37,12 @@ export const SEO = ({ title, description, path, ogType = "website", image, jsonL
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
       <meta property="og:type" content={ogType} />
+      <meta property="og:site_name" content="Abule Tech" />
       {image && <meta property="og:image" content={image} />}
+      {image && <meta property="og:image:width" content={String(imageWidth)} />}
+      {image && <meta property="og:image:height" content={String(imageHeight)} />}
+      {image && imageType && <meta property="og:image:type" content={imageType} />}
+      {image && <meta property="og:image:alt" content={title} />}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />

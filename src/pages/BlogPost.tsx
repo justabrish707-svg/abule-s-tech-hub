@@ -40,24 +40,38 @@ const BlogPost = () => {
 
   return (
     <main className="pt-16">
-      <SEO
-        title={`${post.title} | Abule Tech`}
-        description={post.excerpt}
-        path={`/blog/${post.id}`}
-        ogType="article"
-        image={post.cover_image ?? undefined}
-        jsonLd={{
-          "@context": "https://schema.org",
-          "@type": "Article",
-          headline: post.title,
-          description: post.excerpt,
-          datePublished: post.date,
-          dateModified: post.updated_at ?? post.date,
-          author: { "@type": "Person", name: "Abraham Admasu" },
-          image: post.cover_image ?? undefined,
-          mainEntityOfPage: `https://abule-tech.lovable.app/blog/${post.id}`,
-        }}
-      />
+      {(() => {
+        const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+        const ogParams = new URLSearchParams({
+          title: post.title,
+          category: post.category,
+          author: "Abraham Admasu",
+        });
+        const dynamicOg = `${SUPABASE_URL}/functions/v1/og-image?${ogParams.toString()}`;
+        const ogImage = post.cover_image ?? dynamicOg;
+        const isSvg = !post.cover_image;
+        return (
+          <SEO
+            title={`${post.title} | Abule Tech`}
+            description={post.excerpt}
+            path={`/blog/${post.id}`}
+            ogType="article"
+            image={ogImage}
+            imageType={isSvg ? "image/svg+xml" : undefined}
+            jsonLd={{
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: post.title,
+              description: post.excerpt,
+              datePublished: post.date,
+              dateModified: post.updated_at ?? post.date,
+              author: { "@type": "Person", name: "Abraham Admasu" },
+              image: ogImage,
+              mainEntityOfPage: `https://abule-tech.lovable.app/blog/${post.id}`,
+            }}
+          />
+        );
+      })()}
       <article className="container max-w-2xl py-16">
         <ScrollReveal>
           <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors mb-8">

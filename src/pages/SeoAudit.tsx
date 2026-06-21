@@ -39,6 +39,34 @@ const SeoAudit = () => {
   const [checks, setChecks] = useState<Check[]>([]);
   const [ldReports, setLdReports] = useState<JsonLdReport[]>([]);
   const [running, setRunning] = useState(false);
+  const [gscRunning, setGscRunning] = useState(false);
+  const [gscResult, setGscResult] = useState<{
+    verified: boolean;
+    site?: string;
+    steps?: Array<{ step: string; ok: boolean; status?: number; detail?: unknown }>;
+    error?: string;
+    ranAt: string;
+  } | null>(null);
+
+  const retryGsc = async () => {
+    setGscRunning(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("gsc-verify", { body: {} });
+      if (error) throw error;
+      setGscResult({ ...data, ranAt: new Date().toLocaleTimeString() });
+      toast({
+        title: data?.verified ? "Search Console verified" : "Verification incomplete",
+        description: data?.verified ? "Domain confirmed in Google Search Console." : "See details below for the failing step.",
+        variant: data?.verified ? "default" : "destructive",
+      });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setGscResult({ verified: false, error: msg, ranAt: new Date().toLocaleTimeString() });
+      toast({ title: "Retry failed", description: msg, variant: "destructive" });
+    } finally {
+      setGscRunning(false);
+    }
+  };
 
   useEffect(() => {
     if (!adminLoading && (!user || !isAdmin)) navigate("/");

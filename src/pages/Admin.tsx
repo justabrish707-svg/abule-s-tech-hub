@@ -234,8 +234,16 @@ const Admin = () => {
   // Export subscribers as CSV
   const handleExportCSV = () => {
     if (subscribers.length === 0) { toast.error("No subscribers to export"); return; }
+    // Prevent CSV formula injection: prefix dangerous leading chars and escape embedded quotes.
+    const csvSafe = (v: string) => {
+      const s = String(v ?? "");
+      const guarded = /^[=+\-@\t\r]/.test(s) ? `'${s}` : s;
+      return `"${guarded.replace(/"/g, '""')}"`;
+    };
     const header = "Email,Subscribed At,Status\n";
-    const rows = subscribers.map((s) => `"${s.email}","${new Date(s.subscribed_at).toLocaleDateString()}","${s.is_active ? "Active" : "Inactive"}"`).join("\n");
+    const rows = subscribers
+      .map((s) => [s.email, new Date(s.subscribed_at).toLocaleDateString(), s.is_active ? "Active" : "Inactive"].map(csvSafe).join(","))
+      .join("\n");
     const blob = new Blob([header + rows], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");

@@ -17,6 +17,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import ScrollReveal from "@/components/ScrollReveal";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
+import SocialPreviewTester from "@/components/SocialPreviewTester";
 import { validateMarkdown } from "@/lib/markdownValidation";
 import { AlertTriangle, AlertCircle } from "lucide-react";
 
@@ -453,6 +454,13 @@ const Admin = () => {
                           value={editingPost.cover_image}
                           onChange={(url) => setEditingPost({ ...editingPost, cover_image: url })}
                           postId={editingPost.id || undefined}
+                        />
+                        <SocialPreviewTester
+                          title={editingPost.title}
+                          excerpt={editingPost.excerpt}
+                          category={editingPost.category}
+                          coverImage={editingPost.cover_image}
+                          postId={editingPost.id}
                         />
                         <div>
                           <label className="flex items-center gap-2 text-sm font-medium mb-2 text-muted-foreground"><FileText className="h-3.5 w-3.5" /> Content <span className="text-xs text-muted-foreground/60 font-normal ml-1">Markdown · tables · math ($x^2$, $$...$$) · images</span></label>

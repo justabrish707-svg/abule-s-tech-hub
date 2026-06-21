@@ -265,6 +265,63 @@ const SeoAudit = () => {
           )}
         </section>
 
+        <section className="mb-10">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xl font-bold flex items-center gap-2"><Search className="h-5 w-5" /> Google Search Console</h2>
+            <button
+              onClick={retryGsc}
+              disabled={gscRunning}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 disabled:opacity-50"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${gscRunning ? "animate-spin" : ""}`} />
+              Retry verification
+            </button>
+          </div>
+          <p className="text-xs text-muted-foreground mb-3">
+            Re-runs the token → meta verify → site-add flow against {SITE}. The verification meta tag must be live on the published site.
+          </p>
+          {!gscResult && !gscRunning && (
+            <p className="text-sm text-muted-foreground">No retry run yet — click the button above to attempt verification.</p>
+          )}
+          {gscResult && (
+            <div className="rounded-xl border border-border/50 bg-card p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {gscResult.verified
+                    ? <CheckCircle2 className="h-5 w-5 text-green-500" />
+                    : <XCircle className="h-5 w-5 text-destructive" />}
+                  <p className="font-medium">
+                    {gscResult.verified ? "Verified" : "Not verified"}
+                  </p>
+                </div>
+                <span className="text-xs text-muted-foreground">Ran at {gscResult.ranAt}</span>
+              </div>
+              {gscResult.error && (
+                <p className="text-sm text-destructive">{gscResult.error}</p>
+              )}
+              {gscResult.steps && (
+                <ul className="space-y-1.5">
+                  {gscResult.steps.map((s, i) => (
+                    <li key={i} className="text-xs flex items-start gap-2">
+                      {s.ok
+                        ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500 mt-0.5 shrink-0" />
+                        : <XCircle className="h-3.5 w-3.5 text-destructive mt-0.5 shrink-0" />}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-mono">{s.step} <span className="text-muted-foreground">({s.status ?? "-"})</span></p>
+                        {!s.ok && s.detail !== undefined && (
+                          <pre className="mt-1 p-2 rounded bg-secondary/40 overflow-x-auto text-[11px] text-muted-foreground whitespace-pre-wrap break-all">
+                            {typeof s.detail === "string" ? s.detail : JSON.stringify(s.detail, null, 2)}
+                          </pre>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+        </section>
+
         <section>
           <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><ImageIcon className="h-5 w-5" /> Generated assets</h2>
           <ul className="text-sm space-y-1.5">

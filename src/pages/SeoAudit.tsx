@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CheckCircle2, XCircle, AlertTriangle, ExternalLink, RefreshCw, FileText, Image as ImageIcon, Code2 } from "lucide-react";
+import { CheckCircle2, XCircle, AlertTriangle, ExternalLink, RefreshCw, FileText, Image as ImageIcon, Code2, Search } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { validateJsonLd, type JsonLdReport } from "@/lib/jsonLdValidation";
 import SEO from "@/components/SEO";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 type CheckStatus = "pass" | "fail" | "warn" | "loading";
 

@@ -2,3 +2,6 @@ project_id = "stfnesotidzrpyzbxqbl"
 
 [functions.og-image]
 verify_jwt = false
+
+[functions.gsc-verify]
+verify_jwt = true

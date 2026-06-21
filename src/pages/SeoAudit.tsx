@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CheckCircle2, XCircle, AlertTriangle, ExternalLink, RefreshCw, FileText, Image as ImageIcon, Code2 } from "lucide-react";
+import { CheckCircle2, XCircle, AlertTriangle, ExternalLink, RefreshCw, FileText, Image as ImageIcon, Code2, Search } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { validateJsonLd, type JsonLdReport } from "@/lib/jsonLdValidation";
 import SEO from "@/components/SEO";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 type CheckStatus = "pass" | "fail" | "warn" | "loading";
 
@@ -37,6 +39,34 @@ const SeoAudit = () => {
   const [checks, setChecks] = useState<Check[]>([]);
   const [ldReports, setLdReports] = useState<JsonLdReport[]>([]);
   const [running, setRunning] = useState(false);
+  const [gscRunning, setGscRunning] = useState(false);
+  const [gscResult, setGscResult] = useState<{
+    verified: boolean;
+    site?: string;
+    steps?: Array<{ step: string; ok: boolean; status?: number; detail?: unknown }>;
+    error?: string;
+    ranAt: string;
+  } | null>(null);
+
+  const retryGsc = async () => {
+    setGscRunning(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("gsc-verify", { body: {} });
+      if (error) throw error;
+      setGscResult({ ...data, ranAt: new Date().toLocaleTimeString() });
+      toast({
+        title: data?.verified ? "Search Console verified" : "Verification incomplete",
+        description: data?.verified ? "Domain confirmed in Google Search Console." : "See details below for the failing step.",
+        variant: data?.verified ? "default" : "destructive",
+      });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setGscResult({ verified: false, error: msg, ranAt: new Date().toLocaleTimeString() });
+      toast({ title: "Retry failed", description: msg, variant: "destructive" });
+    } finally {
+      setGscRunning(false);
+    }
+  };
 
   useEffect(() => {
     if (!adminLoading && (!user || !isAdmin)) navigate("/");
@@ -231,6 +261,63 @@ const SeoAudit = () => {
                   )}
                 </div>
               ))}
+            </div>
+          )}
+        </section>
+
+        <section className="mb-10">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xl font-bold flex items-center gap-2"><Search className="h-5 w-5" /> Google Search Console</h2>
+            <button
+              onClick={retryGsc}
+              disabled={gscRunning}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 disabled:opacity-50"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${gscRunning ? "animate-spin" : ""}`} />
+              Retry verification
+            </button>
+          </div>
+          <p className="text-xs text-muted-foreground mb-3">
+            Re-runs the token → meta verify → site-add flow against {SITE}. The verification meta tag must be live on the published site.
+          </p>
+          {!gscResult && !gscRunning && (
+            <p className="text-sm text-muted-foreground">No retry run yet — click the button above to attempt verification.</p>
+          )}
+          {gscResult && (
+            <div className="rounded-xl border border-border/50 bg-card p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {gscResult.verified
+                    ? <CheckCircle2 className="h-5 w-5 text-green-500" />
+                    : <XCircle className="h-5 w-5 text-destructive" />}
+                  <p className="font-medium">
+                    {gscResult.verified ? "Verified" : "Not verified"}
+                  </p>
+                </div>
+                <span className="text-xs text-muted-foreground">Ran at {gscResult.ranAt}</span>
+              </div>
+              {gscResult.error && (
+                <p className="text-sm text-destructive">{gscResult.error}</p>
+              )}
+              {gscResult.steps && (
+                <ul className="space-y-1.5">
+                  {gscResult.steps.map((s, i) => (
+                    <li key={i} className="text-xs flex items-start gap-2">
+                      {s.ok
+                        ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500 mt-0.5 shrink-0" />
+                        : <XCircle className="h-3.5 w-3.5 text-destructive mt-0.5 shrink-0" />}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-mono">{s.step} <span className="text-muted-foreground">({s.status ?? "-"})</span></p>
+                        {!s.ok && s.detail !== undefined && (
+                          <pre className="mt-1 p-2 rounded bg-secondary/40 overflow-x-auto text-[11px] text-muted-foreground whitespace-pre-wrap break-all">
+                            {typeof s.detail === "string" ? s.detail : JSON.stringify(s.detail, null, 2)}
+                          </pre>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
         </section>

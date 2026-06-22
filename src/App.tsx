@@ -23,6 +23,7 @@ const Auth = lazy(() => import("./pages/Auth"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Admin = lazy(() => import("./pages/Admin"));
 const SeoAudit = lazy(() => import("./pages/SeoAudit"));
+const SecurityAudit = lazy(() => import("./pages/SecurityAudit"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 

@@ -97,7 +97,7 @@ const sevStyles: Record<Severity, string> = {
 
 const SecurityAudit = () => {
   const { user, loading } = useAuth();
-  const { isAdmin, isLoading: roleLoading } = useAdminCheck();
+  const { isAdmin, loading: roleLoading } = useAdminCheck();
   const [lastReviewed, setLastReviewed] = useState<string | null>(
     () => localStorage.getItem("security-last-reviewed"),
   );

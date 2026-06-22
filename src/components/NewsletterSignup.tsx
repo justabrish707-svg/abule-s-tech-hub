@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Mail, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { useSubscribe } from "@/hooks/useNewsletter";
+import { checkRateLimit, formatRetry } from "@/lib/rateLimit";
 
 const NewsletterSignup = ({ compact = false }: { compact?: boolean }) => {
   const [email, setEmail] = useState("");
@@ -12,6 +13,11 @@ const NewsletterSignup = ({ compact = false }: { compact?: boolean }) => {
     e.preventDefault();
     if (hp) return; // bot — silently drop
     if (!email.trim()) return;
+    const rl = checkRateLimit({ key: "newsletter", max: 3, windowMs: 60_000, blockMs: 10 * 60_000 });
+    if (!rl.ok) {
+      toast.error(`Too many attempts. Try again in ${formatRetry(rl.retryAfterMs)}.`);
+      return;
+    }
     try {
       await subscribe.mutateAsync(email.trim());
       setEmail("");
@@ -20,6 +26,7 @@ const NewsletterSignup = ({ compact = false }: { compact?: boolean }) => {
       toast.error("Could not subscribe. Try again.");
     }
   };
+
 
   const Honeypot = (
     <input

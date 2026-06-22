@@ -30,10 +30,12 @@ const socials = [
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [hp, setHp] = useState("");
   const sendMessage = useSendContactMessage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (hp) return; // bot — silently drop
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
       toast.error("Please fill in all fields.");
       return;
@@ -76,6 +78,7 @@ const Contact = () => {
           <div className="md:col-span-3">
             <ScrollReveal delay={80}>
               <form onSubmit={handleSubmit} className="space-y-5">
+                <input type="text" tabIndex={-1} autoComplete="off" value={hp} onChange={(e) => setHp(e.target.value)} name="website" aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, opacity: 0 }} />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Name</label>

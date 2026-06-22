@@ -5,10 +5,12 @@ import { useSubscribe } from "@/hooks/useNewsletter";
 
 const NewsletterSignup = ({ compact = false }: { compact?: boolean }) => {
   const [email, setEmail] = useState("");
+  const [hp, setHp] = useState(""); // honeypot — must stay empty
   const subscribe = useSubscribe();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (hp) return; // bot — silently drop
     if (!email.trim()) return;
     try {
       await subscribe.mutateAsync(email.trim());
@@ -19,9 +21,23 @@ const NewsletterSignup = ({ compact = false }: { compact?: boolean }) => {
     }
   };
 
+  const Honeypot = (
+    <input
+      type="text"
+      tabIndex={-1}
+      autoComplete="off"
+      value={hp}
+      onChange={(e) => setHp(e.target.value)}
+      name="website"
+      aria-hidden="true"
+      style={{ position: "absolute", left: "-10000px", width: 1, height: 1, opacity: 0 }}
+    />
+  );
+
   if (compact) {
     return (
       <form onSubmit={handleSubmit} className="flex gap-2">
+        {Honeypot}
         <input
           type="email"
           value={email}
@@ -52,6 +68,7 @@ const NewsletterSignup = ({ compact = false }: { compact?: boolean }) => {
         Get notified about new posts, tutorials, and project updates. No spam, ever.
       </p>
       <form onSubmit={handleSubmit} className="flex gap-2 max-w-sm mx-auto">
+        {Honeypot}
         <input
           type="email"
           value={email}

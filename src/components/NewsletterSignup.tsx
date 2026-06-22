@@ -68,6 +68,7 @@ const NewsletterSignup = ({ compact = false }: { compact?: boolean }) => {
         Get notified about new posts, tutorials, and project updates. No spam, ever.
       </p>
       <form onSubmit={handleSubmit} className="flex gap-2 max-w-sm mx-auto">
+        {Honeypot}
         <input
           type="email"
           value={email}

@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import ScrollReveal from "@/components/ScrollReveal";
 import SEO from "@/components/SEO";
 import { useSendContactMessage } from "@/hooks/useContactMessages";
+import { checkRateLimit, formatRetry } from "@/lib/rateLimit";
 import contactBg from "@/assets/contact-bg.jpg";
 
 const socials = [
@@ -38,6 +39,11 @@ const Contact = () => {
     if (hp) return; // bot — silently drop
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
       toast.error("Please fill in all fields.");
+      return;
+    }
+    const rl = checkRateLimit({ key: "contact", max: 3, windowMs: 5 * 60_000, blockMs: 15 * 60_000 });
+    if (!rl.ok) {
+      toast.error(`Too many messages. Try again in ${formatRetry(rl.retryAfterMs)}.`);
       return;
     }
     try {

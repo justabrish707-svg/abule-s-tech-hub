@@ -37,6 +37,7 @@ const NewsletterSignup = ({ compact = false }: { compact?: boolean }) => {
   if (compact) {
     return (
       <form onSubmit={handleSubmit} className="flex gap-2">
+        {Honeypot}
         <input
           type="email"
           value={email}

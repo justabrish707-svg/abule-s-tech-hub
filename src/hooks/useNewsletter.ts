@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { newsletterSchema } from "@/lib/validation";
 
@@ -23,14 +23,24 @@ export const useSubscribers = () => {
   });
 };
 
+interface SubscribeInput { email: string; website?: string }
+
 export const useSubscribe = () => {
   return useMutation({
-    mutationFn: async (email: string) => {
+    mutationFn: async (input: SubscribeInput | string) => {
+      const email = typeof input === "string" ? input : input.email;
+      const website = typeof input === "string" ? "" : input.website ?? "";
       const parsed = newsletterSchema.parse({ email });
-      const { error } = await supabase.from("newsletter_subscribers").insert({ email: parsed.email.toLowerCase() });
+
+      const { data, error } = await supabase.functions.invoke("public-submit", {
+        body: { action: "newsletter", payload: { email: parsed.email.toLowerCase(), website } },
+      });
       if (error) {
-        if (error.code === "23505") throw new Error("You're already subscribed!");
-        throw error;
+        const msg = (data as { error?: string } | null)?.error ?? error.message ?? "Could not subscribe";
+        throw new Error(msg);
+      }
+      if (data && (data as { error?: string }).error) {
+        throw new Error((data as { error: string }).error);
       }
     },
   });

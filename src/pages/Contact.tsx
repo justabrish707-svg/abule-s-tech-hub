@@ -47,11 +47,12 @@ const Contact = () => {
       return;
     }
     try {
-      await sendMessage.mutateAsync(form);
+      await sendMessage.mutateAsync({ ...form, website: hp });
       setForm({ name: "", email: "", message: "" });
       toast.success("Message sent! I'll get back to you soon.");
-    } catch {
-      toast.error("Failed to send message. Please try again.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Failed to send message. Please try again.";
+      toast.error(msg);
     }
   };
 

@@ -19,11 +19,12 @@ const NewsletterSignup = ({ compact = false }: { compact?: boolean }) => {
       return;
     }
     try {
-      await subscribe.mutateAsync(email.trim());
+      await subscribe.mutateAsync({ email: email.trim(), website: hp });
       setEmail("");
       toast.success("You're subscribed! 🎉");
-    } catch {
-      toast.error("Could not subscribe. Try again.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Could not subscribe. Try again.";
+      toast.error(msg);
     }
   };
 

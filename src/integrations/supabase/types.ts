@@ -212,6 +212,81 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limit_hits: {
+        Row: {
+          action: string
+          hit_at: string
+          id: string
+          identifier: string
+        }
+        Insert: {
+          action: string
+          hit_at?: string
+          id?: string
+          identifier: string
+        }
+        Update: {
+          action?: string
+          hit_at?: string
+          id?: string
+          identifier?: string
+        }
+        Relationships: []
+      }
+      security_audit_trail: {
+        Row: {
+          action: string
+          author: string | null
+          author_email: string | null
+          created_at: string
+          finding_id: string
+          id: string
+          message: string
+        }
+        Insert: {
+          action: string
+          author?: string | null
+          author_email?: string | null
+          created_at?: string
+          finding_id: string
+          id?: string
+          message: string
+        }
+        Update: {
+          action?: string
+          author?: string | null
+          author_email?: string | null
+          created_at?: string
+          finding_id?: string
+          id?: string
+          message?: string
+        }
+        Relationships: []
+      }
+      security_finding_status: {
+        Row: {
+          created_at: string
+          finding_id: string
+          status: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          finding_id: string
+          status: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          finding_id?: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -235,6 +310,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_and_record_rate_limit: {
+        Args: {
+          _action: string
+          _identifier: string
+          _max_hits: number
+          _window_seconds: number
+        }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

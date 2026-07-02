@@ -1,15 +1,22 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { Shield, CheckCircle2, AlertTriangle, ExternalLink, RefreshCw, Download, FileText, Trash2 } from "lucide-react";
+import { Shield, CheckCircle2, AlertTriangle, ExternalLink, RefreshCw, Download, FileText, Trash2, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import SEO from "@/components/SEO";
-import { appendAudit, auditForFinding, readAuditTrail, type AuditEntry } from "@/lib/securityAudit";
+import {
+  appendAudit,
+  fetchAuditTrail,
+  fetchStatusOverrides,
+  upsertStatus,
+  type AuditEntry,
+  type FindingStatus,
+} from "@/lib/securityAudit";
 import { readCspReports, clearCspReports, type CspReport } from "@/lib/cspReports";
 import { toast } from "sonner";
 
 type Severity = "critical" | "high" | "medium" | "low" | "info";
-type Status = "fixed" | "open" | "accepted";
+type Status = FindingStatus;
 
 interface Finding {
   id: string;
@@ -26,7 +33,7 @@ const FINDINGS: Finding[] = [
   { id: "rls-user-roles", source: "Lovable", severity: "critical", title: "user_roles must be locked down via RLS + security-definer", location: "public.user_roles", status: "fixed", note: "RLS on, reads only via has_role() SECURITY DEFINER; no client write paths." },
   { id: "leaked-password", source: "Lovable", severity: "medium", title: "Leaked-password (HIBP) check enabled on email auth", location: "Auth settings", status: "fixed", note: "password_hibp_enabled = true." },
   { id: "csp-referrer", source: "Manual", severity: "medium", title: "Security headers: Referrer-Policy + CSP meta", location: "index.html", status: "fixed", note: "Added strict-origin-when-cross-origin and a Content-Security-Policy meta. HSTS / X-Frame-Options are applied at the Lovable edge." },
-  { id: "form-honeypot", source: "Manual", severity: "low", title: "Honeypot + rate limit on public forms", location: "Contact form, NewsletterSignup", status: "fixed", note: "Hidden 'website' field + client-side rate limiter on Contact (3/5min) and Newsletter (3/min)." },
+  { id: "form-honeypot", source: "Manual", severity: "low", title: "Honeypot + server-side rate limit on public forms", location: "Contact form, NewsletterSignup, supabase/functions/public-submit", status: "fixed", note: "Hidden 'website' field, and server-side rate limits (IP + email hash) enforced in the public-submit edge function." },
   { id: "wiz", source: "Wiz", severity: "info", title: "Workspace-level Wiz scan", location: "Lovable Security tab", status: "open", note: "Wiz runs at the workspace level. No findings reported in the latest run." },
   { id: "aikido", source: "Aikido", severity: "info", title: "Dependency / SAST scan", location: "npm audit + Aikido", status: "open", note: "No high/critical dependency findings in the latest scan." },
 ];
@@ -59,13 +66,33 @@ const downloadBlob = (filename: string, mime: string, content: string): void => 
 const SecurityAudit = () => {
   const { user, loading } = useAuth();
   const { isAdmin, loading: roleLoading } = useAdminCheck();
+
   const [lastReviewed, setLastReviewed] = useState<string | null>(() => localStorage.getItem("security-last-reviewed"));
-  const [statusOverrides, setStatusOverrides] = useState<Record<string, Status>>(() => {
-    try { return JSON.parse(localStorage.getItem("security-status-overrides") || "{}"); } catch { return {}; }
-  });
-  const [trail, setTrail] = useState<AuditEntry[]>(() => readAuditTrail());
+  const [statusOverrides, setStatusOverrides] = useState<Record<string, Status>>({});
+  const [trail, setTrail] = useState<AuditEntry[]>([]);
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
   const [cspReports, setCspReports] = useState<CspReport[]>(() => readCspReports());
+  const [dataLoading, setDataLoading] = useState(true);
+  const [busy, setBusy] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user || !isAdmin) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const [overrides, entries] = await Promise.all([fetchStatusOverrides(), fetchAuditTrail()]);
+        if (cancelled) return;
+        setStatusOverrides(overrides);
+        setTrail(entries);
+      } catch (err) {
+        console.error("Failed to load security audit data", err);
+        toast.error("Failed to load audit data");
+      } finally {
+        if (!cancelled) setDataLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [user, isAdmin]);
 
   const findings = useMemo<Finding[]>(
     () => FINDINGS.map((f) => ({ ...f, status: statusOverrides[f.id] ?? f.status })),
@@ -91,32 +118,56 @@ const SecurityAudit = () => {
   if (!user) return <Navigate to="/auth" replace />;
   if (!isAdmin) return <Navigate to="/" replace />;
 
-  const persistOverrides = (next: Record<string, Status>) => {
-    setStatusOverrides(next);
-    localStorage.setItem("security-status-overrides", JSON.stringify(next));
+  const refreshTrail = async () => {
+    try { setTrail(await fetchAuditTrail()); } catch (err) { console.error(err); }
   };
 
-  const markReviewed = () => {
-    const now = new Date().toISOString();
-    localStorage.setItem("security-last-reviewed", now);
-    setLastReviewed(now);
-    appendAudit({ findingId: "*", action: "reviewed", message: "Full audit reviewed", author: user.email ?? undefined });
-    setTrail(readAuditTrail());
+  const markReviewed = async () => {
+    setBusy("reviewed");
+    try {
+      await appendAudit({ findingId: "*", action: "reviewed", message: "Full audit reviewed", author: user.email ?? undefined, authorId: user.id });
+      const now = new Date().toISOString();
+      localStorage.setItem("security-last-reviewed", now);
+      setLastReviewed(now);
+      await refreshTrail();
+    } catch (err) {
+      console.error(err);
+      toast.error("Could not save review event");
+    } finally {
+      setBusy(null);
+    }
   };
 
-  const changeStatus = (f: Finding, next: Status) => {
+  const changeStatus = async (f: Finding, next: Status) => {
     if (f.status === next) return;
-    persistOverrides({ ...statusOverrides, [f.id]: next });
-    appendAudit({ findingId: f.id, action: "status", message: `${f.status} → ${next}`, author: user.email ?? undefined });
-    setTrail(readAuditTrail());
+    setBusy(f.id);
+    try {
+      await upsertStatus(f.id, next, user.id);
+      await appendAudit({ findingId: f.id, action: "status", message: `${f.status} → ${next}`, author: user.email ?? undefined, authorId: user.id });
+      setStatusOverrides((p) => ({ ...p, [f.id]: next }));
+      await refreshTrail();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update status");
+    } finally {
+      setBusy(null);
+    }
   };
 
-  const addNote = (f: Finding) => {
+  const addNote = async (f: Finding) => {
     const note = (noteDrafts[f.id] ?? "").trim();
     if (!note) return;
-    appendAudit({ findingId: f.id, action: "note", message: note, author: user.email ?? undefined });
-    setNoteDrafts((p) => ({ ...p, [f.id]: "" }));
-    setTrail(readAuditTrail());
+    setBusy(f.id);
+    try {
+      await appendAudit({ findingId: f.id, action: "note", message: note, author: user.email ?? undefined, authorId: user.id });
+      setNoteDrafts((p) => ({ ...p, [f.id]: "" }));
+      await refreshTrail();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to save note");
+    } finally {
+      setBusy(null);
+    }
   };
 
   const exportCsv = () => {
@@ -137,13 +188,36 @@ const SecurityAudit = () => {
     toast.success("Audit trail exported");
   };
 
+  const exportCspCsv = () => {
+    if (cspReports.length === 0) { toast.info("No CSP reports to export"); return; }
+    const ts = new Date().toISOString();
+    const header = ["exported_at", "ts", "route", "effective_directive", "violated_directive", "blocked_uri", "source_file", "line_number", "disposition"];
+    const rows = cspReports.map((r) => {
+      let route = "";
+      try { route = new URL(r.documentURI).pathname; } catch { route = r.documentURI; }
+      return [ts, r.ts, route, r.effectiveDirective, r.violatedDirective, r.blockedURI, r.sourceFile, r.lineNumber, r.disposition];
+    });
+    const csv = [header, ...rows].map((r) => r.map(csvSafe).join(",")).join("\n");
+    downloadBlob(`csp-violations-${ts.replace(/[:.]/g, "-")}.csv`, "text/csv", csv);
+    toast.success("CSP report CSV exported");
+  };
+
+  const exportCspJson = () => {
+    if (cspReports.length === 0) { toast.info("No CSP reports to export"); return; }
+    const ts = new Date().toISOString();
+    const body = JSON.stringify({ exported_at: ts, count: cspReports.length, reports: cspReports }, null, 2);
+    downloadBlob(`csp-violations-${ts.replace(/[:.]/g, "-")}.json`, "application/json", body);
+    toast.success("CSP report JSON exported");
+  };
+
   const exportPdf = () => {
     const ts = new Date().toLocaleString();
+    const trailFor = (id: string) => trail.filter((e) => e.findingId === id);
     const sections = (Object.keys(grouped) as Severity[])
       .map((sev) => `<h2>${sev.toUpperCase()} · ${grouped[sev].length}</h2>` + grouped[sev]
         .map((f) => `<div class="f"><div class="row"><span class="sev ${f.severity}">${f.severity}</span><span class="src">${f.source}</span><span class="st ${f.status}">${f.status}</span></div><h3>${f.title}</h3>${f.location ? `<code>${f.location}</code>` : ""}<p>${f.note}</p>${
-            auditForFinding(f.id).length
-              ? `<ul class="trail">${auditForFinding(f.id).map((e) => `<li><b>${e.action}</b> · ${new Date(e.ts).toLocaleString()}${e.author ? ` · ${e.author}` : ""} — ${e.message}</li>`).join("")}</ul>`
+            trailFor(f.id).length
+              ? `<ul class="trail">${trailFor(f.id).map((e) => `<li><b>${e.action}</b> · ${new Date(e.ts).toLocaleString()}${e.author ? ` · ${e.author}` : ""} — ${e.message}</li>`).join("")}</ul>`
               : ""
           }</div>`).join("")).join("");
     const html = `<!doctype html><html><head><meta charset="utf-8"><title>Security report ${ts}</title><style>body{font:14px/1.5 -apple-system,system-ui,sans-serif;color:#111;padding:32px;max-width:900px;margin:auto}h1{margin:0 0 4px}h2{margin-top:32px;border-bottom:1px solid #ddd;padding-bottom:4px}.meta{color:#666;margin-bottom:24px}.f{border:1px solid #e5e5e5;border-radius:8px;padding:12px 16px;margin:8px 0}.row{display:flex;gap:8px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}.sev,.st{padding:2px 8px;border-radius:4px;font-weight:700}.sev.critical{background:#fee;color:#a00}.sev.high{background:#fed7aa;color:#9a3412}.sev.medium{background:#fef3c7;color:#854d0e}.sev.low{background:#dbeafe;color:#1e40af}.sev.info{background:#eee;color:#444}.st.fixed{background:#d1fae5;color:#065f46}.st.open{background:#ffedd5;color:#9a3412}.st.accepted{background:#eee;color:#444}.src{color:#666}h3{margin:6px 0 4px;font-size:15px}code{font-size:12px;color:#555}.trail{font-size:12px;color:#444;margin:6px 0 0;padding-left:18px}@media print{body{padding:0}}</style></head><body><h1>Security findings report</h1><p class="meta">Exported ${ts} · ${summary.total} findings (${summary.fixed} fixed, ${summary.open} open, ${summary.accepted} accepted)</p>${sections}<script>window.onload=()=>window.print()</script></body></html>`;
@@ -154,8 +228,9 @@ const SecurityAudit = () => {
   };
 
   const refreshCsp = () => {
-    setCspReports(readCspReports());
-    toast.success(`Loaded ${readCspReports().length} CSP reports`);
+    const next = readCspReports();
+    setCspReports(next);
+    toast.success(`Loaded ${next.length} CSP reports`);
   };
 
   const wipeCsp = () => {
@@ -174,7 +249,7 @@ const SecurityAudit = () => {
             </p>
             <h1 className="text-3xl font-bold">Security audit</h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Aggregated findings from every scanner (Lovable, Wiz, Aikido) plus manual hardening notes.
+              Aggregated findings from every scanner (Lovable, Wiz, Aikido) plus manual hardening notes. Notes and audit history are stored in Supabase and shared across admins.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -187,8 +262,8 @@ const SecurityAudit = () => {
             <button onClick={exportPdf} className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-border bg-card text-sm font-medium hover:border-primary/40 transition-all">
               <FileText className="h-4 w-4" /> PDF
             </button>
-            <button onClick={markReviewed} className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-border bg-card text-sm font-medium hover:border-primary/40 transition-all">
-              <RefreshCw className="h-4 w-4" /> Mark reviewed
+            <button onClick={markReviewed} disabled={busy === "reviewed"} className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-border bg-card text-sm font-medium hover:border-primary/40 transition-all disabled:opacity-50">
+              {busy === "reviewed" ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />} Mark reviewed
             </button>
           </div>
         </div>
@@ -230,9 +305,15 @@ const SecurityAudit = () => {
               <h2 className="font-semibold">CSP violation reports</h2>
               <p className="text-xs text-muted-foreground">Captured in this browser from <code>securitypolicyviolation</code> events. Latest {cspReports.length} (max 50).</p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <button onClick={refreshCsp} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs hover:border-primary/40">
                 <RefreshCw className="h-3 w-3" /> Refresh
+              </button>
+              <button onClick={exportCspCsv} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs hover:border-primary/40">
+                <Download className="h-3 w-3" /> CSV
+              </button>
+              <button onClick={exportCspJson} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs hover:border-primary/40">
+                <Download className="h-3 w-3" /> JSON
               </button>
               <button onClick={wipeCsp} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs hover:border-destructive/40 hover:text-destructive">
                 <Trash2 className="h-3 w-3" /> Clear
@@ -243,18 +324,28 @@ const SecurityAudit = () => {
             <p className="text-sm text-muted-foreground">No CSP violations recorded.</p>
           ) : (
             <ul className="space-y-2 max-h-64 overflow-auto">
-              {cspReports.map((r, i) => (
-                <li key={i} className="text-xs rounded-lg border border-border/50 bg-background p-2 font-mono break-all">
-                  <span className="text-muted-foreground">{new Date(r.ts).toLocaleString()} · </span>
-                  <span className="text-orange-500">{r.effectiveDirective || r.violatedDirective}</span>{" "}
-                  blocked <span className="text-foreground">{r.blockedURI || "(inline)"}</span>
-                  {r.sourceFile && <span className="text-muted-foreground"> @ {r.sourceFile}:{r.lineNumber}</span>}
-                </li>
-              ))}
+              {cspReports.map((r, i) => {
+                let route = "";
+                try { route = new URL(r.documentURI).pathname; } catch { route = r.documentURI; }
+                return (
+                  <li key={i} className="text-xs rounded-lg border border-border/50 bg-background p-2 font-mono break-all">
+                    <span className="text-muted-foreground">{new Date(r.ts).toLocaleString()} · </span>
+                    <span className="text-primary">{route || "/"}</span> ·{" "}
+                    <span className="text-orange-500">{r.effectiveDirective || r.violatedDirective}</span>{" "}
+                    blocked <span className="text-foreground">{r.blockedURI || "(inline)"}</span>
+                    {r.sourceFile && <span className="text-muted-foreground"> @ {r.sourceFile}:{r.lineNumber}</span>}
+                  </li>
+                );
+              })}
             </ul>
           )}
         </section>
 
+        {dataLoading ? (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground py-8 justify-center">
+            <Loader2 className="h-4 w-4 animate-spin" /> Loading findings…
+          </div>
+        ) : (
         <div className="space-y-8">
           {(Object.keys(grouped) as Severity[]).map((sev) => (
             <section key={sev}>
@@ -264,6 +355,7 @@ const SecurityAudit = () => {
               <ul className="space-y-3">
                 {grouped[sev].map((f) => {
                   const fTrail = trail.filter((e) => e.findingId === f.id);
+                  const isBusy = busy === f.id;
                   return (
                     <li key={f.id} className="rounded-xl border border-border/50 bg-card p-4">
                       <div className="flex items-start justify-between gap-3 flex-wrap">
@@ -280,8 +372,9 @@ const SecurityAudit = () => {
                         </div>
                         <select
                           value={f.status}
+                          disabled={isBusy}
                           onChange={(e) => changeStatus(f, e.target.value as Status)}
-                          className={`text-xs font-medium px-2.5 py-1 rounded-full border bg-background ${
+                          className={`text-xs font-medium px-2.5 py-1 rounded-full border bg-background disabled:opacity-50 ${
                             f.status === "fixed" ? "text-green-500 border-green-500/30" : f.status === "accepted" ? "text-muted-foreground border-border" : "text-orange-500 border-orange-500/30"
                           }`}
                         >
@@ -299,8 +392,8 @@ const SecurityAudit = () => {
                           placeholder="Add a review note…"
                           className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
                         />
-                        <button onClick={() => addNote(f)} className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90">
-                          Add
+                        <button onClick={() => addNote(f)} disabled={isBusy} className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50 inline-flex items-center gap-1.5">
+                          {isBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null} Add
                         </button>
                       </div>
 
@@ -326,6 +419,7 @@ const SecurityAudit = () => {
             </section>
           ))}
         </div>
+        )}
       </div>
     </main>
   );

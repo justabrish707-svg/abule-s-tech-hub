@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { contactSchema } from "@/lib/validation";
 
@@ -25,16 +25,25 @@ export const useContactMessages = () => {
   });
 };
 
+interface SendInput { name: string; email: string; message: string; website?: string }
+
 export const useSendContactMessage = () => {
   return useMutation({
-    mutationFn: async (msg: { name: string; email: string; message: string }) => {
-      const parsed = contactSchema.parse(msg);
-      const { error } = await supabase.from("contact_messages").insert({
-        name: parsed.name,
-        email: parsed.email,
-        message: parsed.message,
+    mutationFn: async (msg: SendInput) => {
+      const parsed = contactSchema.parse({ name: msg.name, email: msg.email, message: msg.message });
+      const { data, error } = await supabase.functions.invoke("public-submit", {
+        body: {
+          action: "contact",
+          payload: { name: parsed.name, email: parsed.email, message: parsed.message, website: msg.website ?? "" },
+        },
       });
-      if (error) throw error;
+      if (error) {
+        const server = (data as { error?: string } | null)?.error ?? error.message ?? "Could not send message";
+        throw new Error(server);
+      }
+      if (data && (data as { error?: string }).error) {
+        throw new Error((data as { error: string }).error);
+      }
     },
   });
 };

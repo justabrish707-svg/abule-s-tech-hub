@@ -100,10 +100,11 @@ const Index = () => {
               <h1 className="text-[2.5rem] leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 sm:mb-5 opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
                 Hi, I'm{" "}
                 <span className="relative inline-block">
-                  <span className="text-gradient">Abraham</span>
+                  <span className="text-gradient">Abraham Admasu</span>
                   <span aria-hidden className="pointer-events-none absolute -bottom-1.5 left-0 right-0 h-[6px] bg-gradient-to-r from-primary/70 via-primary-glow/40 to-transparent blur-[3px] rounded-full" />
                   <span aria-hidden className="pointer-events-none absolute -bottom-1 left-0 h-[2px] w-2/3 bg-gradient-to-r from-primary to-transparent rounded-full" />
                 </span>
+                {" "}— Developer &amp; Cybersecurity Enthusiast
               </h1>
 
               <div className="text-xl sm:text-2xl md:text-3xl font-semibold text-muted-foreground min-h-[2.25rem] sm:min-h-[2.5rem] mb-5 sm:mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "350ms" }}>

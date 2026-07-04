@@ -5,6 +5,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 import { Mail, Lock, User, LogIn, UserPlus, Terminal, Eye, EyeOff, Sparkles, Code2, Zap } from "lucide-react";
 import { authSchema, signupSchema } from "@/lib/validation";
+import SEO from "@/components/SEO";
 
 const FloatingParticle = ({ delay, size, x, y, duration }: { delay: number; size: number; x: number; y: number; duration: number }) => (
   <div
@@ -115,6 +116,11 @@ const Auth = () => {
 
   return (
     <main className="pt-16 min-h-screen flex relative overflow-hidden">
+      <SEO
+        title="Sign In or Create Account | Abule Tech"
+        description="Sign in or create an Abule Tech account to comment on posts, manage your profile, and access the developer community."
+        path="/auth"
+      />
       {/* Background effects */}
       <div className="absolute inset-0 hero-gradient" />
       <div className="absolute inset-0 grid-pattern opacity-10" />

@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import ScrollReveal from "@/components/ScrollReveal";
+import SEO from "@/components/SEO";
 
 const Profile = () => {
   const { user, profile, loading } = useAuth();
@@ -108,6 +109,11 @@ const Profile = () => {
 
   return (
     <main className="pt-16">
+      <SEO
+        title="Your Profile | Abule Tech"
+        description="Manage your Abule Tech profile: update your username, upload an avatar, and keep your account details current."
+        path="/profile"
+      />
       <div className="container max-w-lg py-16">
         <ScrollReveal>
           <h1 className="text-3xl font-bold mb-2">Profile Settings</h1>

@@ -5,6 +5,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 import { Mail, Lock, User, LogIn, UserPlus, Terminal, Eye, EyeOff, Sparkles, Code2, Zap } from "lucide-react";
 import { authSchema, signupSchema } from "@/lib/validation";
+import SEO from "@/components/SEO";
 
 const FloatingParticle = ({ delay, size, x, y, duration }: { delay: number; size: number; x: number; y: number; duration: number }) => (
   <div

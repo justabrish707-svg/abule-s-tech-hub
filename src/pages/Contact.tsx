@@ -80,25 +80,27 @@ const Contact = () => {
       </section>
 
       <div className="container max-w-3xl py-12">
+        <h2 className="sr-only">Contact form and details</h2>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
           {/* Form */}
           <div className="md:col-span-3">
             <ScrollReveal delay={80}>
+              <h3 className="text-lg font-semibold mb-4">Send a message</h3>
               <form onSubmit={handleSubmit} className="space-y-5">
                 <input type="text" tabIndex={-1} autoComplete="off" value={hp} onChange={(e) => setHp(e.target.value)} name="website" aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, opacity: 0 }} />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Name</label>
-                    <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your name" className="w-full px-4 py-3 rounded-xl border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all" maxLength={100} />
+                    <label htmlFor="contact-name" className="block text-sm font-medium mb-2">Name</label>
+                    <input id="contact-name" name="name" type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your name" className="w-full px-4 py-3 rounded-xl border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all" maxLength={100} />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Email</label>
-                    <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@example.com" className="w-full px-4 py-3 rounded-xl border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all" maxLength={255} />
+                    <label htmlFor="contact-email" className="block text-sm font-medium mb-2">Email</label>
+                    <input id="contact-email" name="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@example.com" className="w-full px-4 py-3 rounded-xl border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all" maxLength={255} />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Message</label>
-                  <textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="What's on your mind?" rows={6} maxLength={1000} className="w-full px-4 py-3 rounded-xl border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all resize-none" />
+                  <label htmlFor="contact-message" className="block text-sm font-medium mb-2">Message</label>
+                  <textarea id="contact-message" name="message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="What's on your mind?" rows={6} maxLength={1000} className="w-full px-4 py-3 rounded-xl border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all resize-none" />
                 </div>
                 <button type="submit" disabled={sendMessage.isPending} className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed">
                   {sendMessage.isPending ? "Sending..." : "Send Message"}

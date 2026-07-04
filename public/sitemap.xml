@@ -5,4 +5,23 @@
   <url><loc>https://abule-tech.lovable.app/projects</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://abule-tech.lovable.app/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://abule-tech.lovable.app/contact</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://abule-tech.lovable.app/auth</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/post-1-how-the-internet-works-beginner-guide-with-simple-exa</loc><lastmod>2026-05-12</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/post-2-html-explained-for-beginners-build-your-first-webpage</loc><lastmod>2026-05-12</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/post-3-css-basics-make-websites-beautiful</loc><lastmod>2026-05-12</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/post-4-javascript-for-beginners-make-websites-interactive</loc><lastmod>2026-05-12</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/post-5-flexbox-made-easy-easy-layout-guide</loc><lastmod>2026-05-12</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/post-6-build-responsive-navbar-using-html-and-css</loc><lastmod>2026-05-12</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/post-7-dark-mode-website-using-css</loc><lastmod>2026-05-12</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/post-8-introduction-to-react-what-is-react-beginner-guide-wi</loc><lastmod>2026-05-12</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/post-9-build-your-first-portfolio-website-step-by-step</loc><lastmod>2026-05-12</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/post-10-deploy-your-website-how-to-deploy-your-website-for-f</loc><lastmod>2026-05-12</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/beginner-guide-to-cybersecurity</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/binary-search-explained</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/bros-the-247-street-food-spot-everyone-talks-about-in-arba-m</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/esmael-furniture-modern-luxury-furniture-website-design-proj</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/how-i-built-my-first-website</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/linux-terminal-essentials</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/understanding-big-o-notation</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://abule-tech.lovable.app/blog/wubete-hotel-hospitality-website-design-project-arba-minch</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>

@@ -116,6 +116,11 @@ const Auth = () => {
 
   return (
     <main className="pt-16 min-h-screen flex relative overflow-hidden">
+      <SEO
+        title="Sign In or Create Account | Abule Tech"
+        description="Sign in or create an Abule Tech account to comment on posts, manage your profile, and access the developer community."
+        path="/auth"
+      />
       {/* Background effects */}
       <div className="absolute inset-0 hero-gradient" />
       <div className="absolute inset-0 grid-pattern opacity-10" />

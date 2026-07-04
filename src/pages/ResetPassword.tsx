@@ -83,6 +83,11 @@ const ResetPassword = () => {
 
   return (
     <main className="pt-16 min-h-screen flex items-center justify-center relative overflow-hidden">
+      <SEO
+        title="Reset Your Password | Abule Tech"
+        description="Set a new password for your Abule Tech account. Choose a strong password to keep your profile and comments secure."
+        path="/reset-password"
+      />
       <div className="absolute inset-0 hero-gradient" />
       <div className="absolute inset-0 grid-pattern opacity-10" />
 

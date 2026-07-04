@@ -186,7 +186,7 @@ const SeoAudit = () => {
 
   return (
     <main className="pt-16">
-      <SEO title="SEO Audit | Admin · Abule Tech" description="In-app SEO audit and status." path="/admin/seo" />
+      <SEO title="SEO Audit | Admin · Abule Tech" description="In-app SEO audit dashboard: check meta tags, canonical URLs, sitemap coverage, and Google Search Console verification status for Abule Tech." path="/admin/seo" />
       <div className="container max-w-4xl py-12">
         <div className="flex items-center justify-between mb-8">
           <div>

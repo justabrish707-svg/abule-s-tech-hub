@@ -287,6 +287,42 @@ export type Database = {
         }
         Relationships: []
       }
+      security_scan_snapshots: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          findings: Json
+          fixed_count: number
+          id: string
+          label: string
+          open_count: number
+          source: string
+          total_count: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          findings?: Json
+          fixed_count?: number
+          id?: string
+          label: string
+          open_count?: number
+          source?: string
+          total_count?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          findings?: Json
+          fixed_count?: number
+          id?: string
+          label?: string
+          open_count?: number
+          source?: string
+          total_count?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string

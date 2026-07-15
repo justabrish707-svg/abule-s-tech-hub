@@ -3,7 +3,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 
-export type AuditAction = "note" | "status" | "reviewed";
+export type AuditAction = "note" | "status" | "reviewed" | "export" | "snapshot";
 export type FindingStatus = "open" | "fixed" | "accepted";
 
 export interface AuditEntry {

@@ -210,26 +210,33 @@ const SecurityAudit = () => {
     toast.success("Audit trail exported");
   };
 
-  const exportCspCsv = () => {
+  const exportCspFile = async (format: "csv" | "json") => {
     if (cspReports.length === 0) { toast.info("No CSP reports to export"); return; }
-    const ts = new Date().toISOString();
-    const header = ["exported_at", "ts", "route", "effective_directive", "violated_directive", "blocked_uri", "source_file", "line_number", "disposition"];
-    const rows = cspReports.map((r) => {
-      let route = "";
-      try { route = new URL(r.documentURI).pathname; } catch { route = r.documentURI; }
-      return [ts, r.ts, route, r.effectiveDirective, r.violatedDirective, r.blockedURI, r.sourceFile, r.lineNumber, r.disposition];
-    });
-    const csv = [header, ...rows].map((r) => r.map(csvSafe).join(",")).join("\n");
-    downloadBlob(`csp-violations-${ts.replace(/[:.]/g, "-")}.csv`, "text/csv", csv);
-    toast.success("CSP report CSV exported");
-  };
-
-  const exportCspJson = () => {
-    if (cspReports.length === 0) { toast.info("No CSP reports to export"); return; }
-    const ts = new Date().toISOString();
-    const body = JSON.stringify({ exported_at: ts, count: cspReports.length, reports: cspReports }, null, 2);
-    downloadBlob(`csp-violations-${ts.replace(/[:.]/g, "-")}.json`, "application/json", body);
-    toast.success("CSP report JSON exported");
+    setBusy(`csp-${format}`);
+    try {
+      const { data: sessionRes } = await supabase.auth.getSession();
+      const token = sessionRes.session?.access_token;
+      if (!token) { toast.error("Session expired — sign in again"); return; }
+      const { data, error } = await supabase.functions.invoke("security-csp-export", {
+        body: { format, reports: cspReports },
+      });
+      if (error) {
+        console.error(error);
+        toast.error(error.message ?? "Export rejected");
+        return;
+      }
+      const ts = new Date().toISOString().replace(/[:.]/g, "-");
+      const mime = format === "csv" ? "text/csv" : "application/json";
+      const body = typeof data === "string" ? data : JSON.stringify(data, null, 2);
+      downloadBlob(`csp-violations-${ts}.${format}`, mime, body);
+      toast.success(`CSP report ${format.toUpperCase()} exported`);
+      await refreshTrail();
+    } catch (err) {
+      console.error(err);
+      toast.error("CSP export failed");
+    } finally {
+      setBusy(null);
+    }
   };
 
   const exportPdf = () => {

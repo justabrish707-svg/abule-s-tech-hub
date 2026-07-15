@@ -82,16 +82,30 @@ const SecurityAudit = () => {
   const [cspReports, setCspReports] = useState<CspReport[]>(() => readCspReports());
   const [dataLoading, setDataLoading] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
+  const [snapshots, setSnapshots] = useState<ScanSnapshot[]>([]);
+  const [baseSnapshotId, setBaseSnapshotId] = useState<string>("");
+  const [headSnapshotId, setHeadSnapshotId] = useState<string>("");
 
   useEffect(() => {
     if (!user || !isAdmin) return;
     let cancelled = false;
     (async () => {
       try {
-        const [overrides, entries] = await Promise.all([fetchStatusOverrides(), fetchAuditTrail()]);
+        const [overrides, entries, snaps] = await Promise.all([
+          fetchStatusOverrides(),
+          fetchAuditTrail(),
+          listSnapshots(),
+        ]);
         if (cancelled) return;
         setStatusOverrides(overrides);
         setTrail(entries);
+        setSnapshots(snaps);
+        if (snaps.length >= 2) {
+          setHeadSnapshotId(snaps[0].id);
+          setBaseSnapshotId(snaps[1].id);
+        } else if (snaps.length === 1) {
+          setHeadSnapshotId(snaps[0].id);
+        }
       } catch (err) {
         console.error("Failed to load security audit data", err);
         toast.error("Failed to load audit data");

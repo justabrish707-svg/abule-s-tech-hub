@@ -334,6 +334,9 @@ const SecurityAudit = () => {
             <button onClick={exportPdf} className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-border bg-card text-sm font-medium hover:border-primary/40 transition-all">
               <FileText className="h-4 w-4" /> PDF
             </button>
+            <button onClick={saveCurrentSnapshot} disabled={busy === "snapshot"} className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-border bg-card text-sm font-medium hover:border-primary/40 transition-all disabled:opacity-50">
+              {busy === "snapshot" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />} Save snapshot
+            </button>
             <button onClick={markReviewed} disabled={busy === "reviewed"} className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-border bg-card text-sm font-medium hover:border-primary/40 transition-all disabled:opacity-50">
               {busy === "reviewed" ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />} Mark reviewed
             </button>

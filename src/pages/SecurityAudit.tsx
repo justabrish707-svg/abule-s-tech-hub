@@ -267,6 +267,49 @@ const SecurityAudit = () => {
     setCspReports([]);
   };
 
+  const saveCurrentSnapshot = async () => {
+    setBusy("snapshot");
+    try {
+      const label = `Scan ${new Date().toLocaleString()}`;
+      const payload: SnapshotFinding[] = findings.map((f) => ({
+        id: f.id,
+        severity: f.severity,
+        source: f.source,
+        title: f.title,
+        location: f.location,
+        status: f.status,
+        note: f.note,
+      }));
+      const saved = await saveSnapshot({ label, findings: payload, createdBy: user.id });
+      await appendAudit({
+        findingId: "*",
+        action: "snapshot",
+        message: `Saved snapshot "${label}" · ${saved.totalCount} findings (${saved.fixedCount} fixed, ${saved.openCount} open)`,
+        author: user.email ?? undefined,
+        authorId: user.id,
+      });
+      const next = await listSnapshots();
+      setSnapshots(next);
+      setHeadSnapshotId(saved.id);
+      if (!baseSnapshotId && next[1]) setBaseSnapshotId(next[1].id);
+      await refreshTrail();
+      toast.success("Snapshot saved");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to save snapshot");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const compareSnapshots = useMemo(() => {
+    if (!baseSnapshotId || !headSnapshotId || baseSnapshotId === headSnapshotId) return null;
+    const base = snapshots.find((s) => s.id === baseSnapshotId);
+    const head = snapshots.find((s) => s.id === headSnapshotId);
+    if (!base || !head) return null;
+    return { base, head, diff: diffSnapshots(base, head) };
+  }, [snapshots, baseSnapshotId, headSnapshotId]);
+
   return (
     <main className="pt-20 min-h-screen">
       <SEO title="Security audit — Admin" description="Aggregated security findings across all scanners." path="/admin/security" />

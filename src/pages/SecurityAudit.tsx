@@ -377,6 +377,67 @@ const SecurityAudit = () => {
         <section className="rounded-2xl border border-border/50 bg-card/60 p-4 mb-8">
           <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
             <div>
+              <h2 className="font-semibold flex items-center gap-2"><GitCompare className="h-4 w-4" /> Compare scan snapshots</h2>
+              <p className="text-xs text-muted-foreground">Persisted history of every saved scan · {snapshots.length} snapshot(s).</p>
+            </div>
+          </div>
+          {snapshots.length < 2 ? (
+            <p className="text-sm text-muted-foreground">Save at least two snapshots to compare them. Use <em>Save snapshot</em> above to capture the current findings.</p>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                <label className="text-xs text-muted-foreground flex flex-col gap-1">
+                  Base (older)
+                  <select value={baseSnapshotId} onChange={(e) => setBaseSnapshotId(e.target.value)} className="px-2 py-1.5 rounded-lg border border-border bg-background text-sm">
+                    <option value="">Select…</option>
+                    {snapshots.map((s) => (
+                      <option key={s.id} value={s.id}>{new Date(s.createdAt).toLocaleString()} · {s.label}</option>
+                    ))}
+                  </select>
+                </label>
+                <label className="text-xs text-muted-foreground flex flex-col gap-1">
+                  Head (newer)
+                  <select value={headSnapshotId} onChange={(e) => setHeadSnapshotId(e.target.value)} className="px-2 py-1.5 rounded-lg border border-border bg-background text-sm">
+                    <option value="">Select…</option>
+                    {snapshots.map((s) => (
+                      <option key={s.id} value={s.id}>{new Date(s.createdAt).toLocaleString()} · {s.label}</option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              {compareSnapshots ? (
+                <div>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3 text-center">
+                    <div className="rounded-lg border border-border/50 bg-background p-2"><p className="text-[10px] uppercase text-muted-foreground">New</p><p className="text-lg font-bold text-orange-500">{compareSnapshots.diff.added.length}</p></div>
+                    <div className="rounded-lg border border-border/50 bg-background p-2"><p className="text-[10px] uppercase text-muted-foreground">Fixed</p><p className="text-lg font-bold text-green-500">{compareSnapshots.diff.newlyFixed.length}</p></div>
+                    <div className="rounded-lg border border-border/50 bg-background p-2"><p className="text-[10px] uppercase text-muted-foreground">Reopened</p><p className="text-lg font-bold text-destructive">{compareSnapshots.diff.reopened.length}</p></div>
+                    <div className="rounded-lg border border-border/50 bg-background p-2"><p className="text-[10px] uppercase text-muted-foreground">Removed</p><p className="text-lg font-bold text-muted-foreground">{compareSnapshots.diff.removed.length}</p></div>
+                  </div>
+                  {[
+                    { label: "New in head", items: compareSnapshots.diff.added, tone: "text-orange-500" },
+                    { label: "Newly fixed", items: compareSnapshots.diff.newlyFixed, tone: "text-green-500" },
+                    { label: "Reopened", items: compareSnapshots.diff.reopened, tone: "text-destructive" },
+                    { label: "Removed from head", items: compareSnapshots.diff.removed, tone: "text-muted-foreground" },
+                  ].filter((g) => g.items.length > 0).map((g) => (
+                    <div key={g.label} className="mb-2">
+                      <p className={`text-xs font-semibold ${g.tone}`}>{g.label}</p>
+                      <ul className="text-xs text-muted-foreground pl-4 list-disc">
+                        {g.items.map((f) => (<li key={f.id}><span className="font-mono">[{f.severity}]</span> {f.title}</li>))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground">Pick two different snapshots to see the diff.</p>
+              )}
+            </>
+          )}
+        </section>
+
+
+        <section className="rounded-2xl border border-border/50 bg-card/60 p-4 mb-8">
+          <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
+            <div>
               <h2 className="font-semibold">CSP violation reports</h2>
               <p className="text-xs text-muted-foreground">Captured in this browser from <code>securitypolicyviolation</code> events. Latest {cspReports.length} (max 50).</p>
             </div>

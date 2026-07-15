@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { Shield, CheckCircle2, AlertTriangle, ExternalLink, RefreshCw, Download, FileText, Trash2, Loader2 } from "lucide-react";
+import { Shield, CheckCircle2, AlertTriangle, ExternalLink, RefreshCw, Download, FileText, Trash2, Loader2, GitCompare, Save } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
 import {
   appendAudit,
@@ -12,6 +13,13 @@ import {
   type AuditEntry,
   type FindingStatus,
 } from "@/lib/securityAudit";
+import {
+  listSnapshots,
+  saveSnapshot,
+  diffSnapshots,
+  type ScanSnapshot,
+  type SnapshotFinding,
+} from "@/lib/scanSnapshots";
 import { readCspReports, clearCspReports, type CspReport } from "@/lib/cspReports";
 import { toast } from "sonner";
 

@@ -338,11 +338,11 @@ const SecurityAudit = () => {
               <button onClick={refreshCsp} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs hover:border-primary/40">
                 <RefreshCw className="h-3 w-3" /> Refresh
               </button>
-              <button onClick={exportCspCsv} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs hover:border-primary/40">
-                <Download className="h-3 w-3" /> CSV
+              <button onClick={() => exportCspFile("csv")} disabled={busy === "csp-csv"} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs hover:border-primary/40 disabled:opacity-50">
+                {busy === "csp-csv" ? <Loader2 className="h-3 w-3 animate-spin" /> : <Download className="h-3 w-3" />} CSV
               </button>
-              <button onClick={exportCspJson} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs hover:border-primary/40">
-                <Download className="h-3 w-3" /> JSON
+              <button onClick={() => exportCspFile("json")} disabled={busy === "csp-json"} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs hover:border-primary/40 disabled:opacity-50">
+                {busy === "csp-json" ? <Loader2 className="h-3 w-3 animate-spin" /> : <Download className="h-3 w-3" />} JSON
               </button>
               <button onClick={wipeCsp} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs hover:border-destructive/40 hover:text-destructive">
                 <Trash2 className="h-3 w-3" /> Clear

@@ -66,6 +66,7 @@ var toolError = (scope, error) => {
     isError: true
   };
 };
+var sanitizeFilterTerm = (term) => term.replace(/[,().*\\%]/g, " ").trim().slice(0, 100);
 
 // src/lib/mcp/tools/list-blog-posts.ts
 var list_blog_posts_default = defineTool({
@@ -84,7 +85,10 @@ var list_blog_posts_default = defineTool({
     }
     let query = supabaseForUser(ctx).from("blog_posts").select("id, title, excerpt, category, read_time, date, cover_image").order("date", { ascending: false }).limit(limit ?? 10);
     if (category) query = query.eq("category", category);
-    if (search) query = query.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%`);
+    if (search) {
+      const term = sanitizeFilterTerm(search);
+      if (term) query = query.or(`title.ilike.%${term}%,excerpt.ilike.%${term}%`);
+    }
     const { data, error } = await query;
     if (error) return toolError("list-blog-posts", error);
     return {

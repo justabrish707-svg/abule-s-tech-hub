@@ -90,7 +90,7 @@ const Auth = () => {
         toast.error("Invalid email or password.");
       } else {
         toast.success("Welcome back!");
-        navigate("/");
+        navigate(nextPath ?? "/");
       }
     } else {
       const parsed = signupSchema.safeParse({ email, password, username });

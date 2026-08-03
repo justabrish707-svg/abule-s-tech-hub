@@ -1,7 +1,7 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 import { supabaseForUser } from "../supabase";
-import { toolError } from "../errors";
+import { sanitizeFilterTerm, toolError } from "../errors";
 
 export default defineTool({
   name: "list_blog_posts",

@@ -52,6 +52,7 @@ const App = () => (
               <Route path="/admin/seo" element={<SeoAudit />} />
               <Route path="/admin/security" element={<SecurityAudit />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

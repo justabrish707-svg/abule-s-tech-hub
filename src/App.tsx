@@ -25,6 +25,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const SeoAudit = lazy(() => import("./pages/SeoAudit"));
 const SecurityAudit = lazy(() => import("./pages/SecurityAudit"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();

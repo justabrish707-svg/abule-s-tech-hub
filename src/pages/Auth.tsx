@@ -48,6 +48,12 @@ const Auth = () => {
   const [mounted, setMounted] = useState(false);
   const [forgotMode, setForgotMode] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Preserve an OAuth consent (or other) return path across every sign-in method.
+  const rawNext = searchParams.get("next");
+  const nextPath = rawNext && /^\/(?!\/)/.test(rawNext) ? rawNext : null;
+  const postAuthUrl = nextPath ? `${window.location.origin}${nextPath}` : window.location.origin;
 
   useEffect(() => {
     setMounted(true);

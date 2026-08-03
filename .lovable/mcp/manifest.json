@@ -1,0 +1,204 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://stfnesotidzrpyzbxqbl.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "abule-s-tech-hub",
+      "version": "0.1.0",
+      "title": "Abule's Tech Hub"
+    },
+    "tools": [
+      {
+        "name": "list_blog_posts",
+        "title": "List blog posts",
+        "description": "List published blog posts, newest first. Optionally filter by category or a title/excerpt search term.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "search": {
+              "type": "string",
+              "description": "Match against title and excerpt."
+            },
+            "category": {
+              "type": "string",
+              "description": "Exact category name, e.g. 'Security'."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "description": "Max posts to return (default 10)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_blog_post",
+        "title": "Get blog post",
+        "description": "Fetch the full markdown content and metadata of a single blog post by its id.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The blog post id (slug)."
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_blog_post",
+        "title": "Create blog post",
+        "description": "Publish a new blog post written in GitHub-flavored markdown. Requires an admin account; non-admins are rejected by database policy.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "URL slug, e.g. 'react-security-best-practices'."
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "excerpt": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Short summary shown in listings and social previews."
+            },
+            "content": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Full post body in GitHub-flavored markdown."
+            },
+            "category": {
+              "type": "string",
+              "minLength": 1
+            },
+            "read_time": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Human-readable reading time, e.g. '6 min read'."
+            },
+            "cover_image": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "id",
+            "title",
+            "excerpt",
+            "content",
+            "category",
+            "read_time"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_projects",
+        "title": "List portfolio projects",
+        "description": "List portfolio projects with their status, tech stack, and links, ordered as shown on the site.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "description": "Filter by status, e.g. 'live' or 'in-progress'."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "description": "Max projects to return (default 20)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "post_comment",
+        "title": "Post a comment",
+        "description": "Add a comment (or a threaded reply) to a blog post as the signed-in user.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "post_id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The blog post id to comment on."
+            },
+            "content": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000
+            },
+            "parent_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Comment id to reply to."
+            }
+          },
+          "required": [
+            "post_id",
+            "content"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

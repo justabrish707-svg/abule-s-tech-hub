@@ -1,6 +1,7 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 import { supabaseForUser } from "../supabase";
+import { toolError } from "../errors";
 
 export default defineTool({
   name: "get_blog_post",
@@ -18,7 +19,7 @@ export default defineTool({
       .eq("id", id)
       .maybeSingle();
 
-    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (error) return toolError("get-blog-post", error);
     if (!data) return { content: [{ type: "text", text: `No blog post found with id "${id}".` }], isError: true };
 
     return {

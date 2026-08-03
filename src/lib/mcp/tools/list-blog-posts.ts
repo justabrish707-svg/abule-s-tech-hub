@@ -1,6 +1,7 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 import { supabaseForUser } from "../supabase";
+import { sanitizeFilterTerm, toolError } from "../errors";
 
 export default defineTool({
   name: "list_blog_posts",
@@ -24,10 +25,13 @@ export default defineTool({
       .limit(limit ?? 10);
 
     if (category) query = query.eq("category", category);
-    if (search) query = query.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%`);
+    if (search) {
+      const term = sanitizeFilterTerm(search);
+      if (term) query = query.or(`title.ilike.%${term}%,excerpt.ilike.%${term}%`);
+    }
 
     const { data, error } = await query;
-    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (error) return toolError("list-blog-posts", error);
 
     return {
       content: [{ type: "text", text: JSON.stringify(data ?? []) }],

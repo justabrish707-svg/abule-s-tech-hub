@@ -1,6 +1,7 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 import { supabaseForUser } from "../supabase";
+import { toolError } from "../errors";
 
 export default defineTool({
   name: "create_blog_post",
@@ -27,7 +28,7 @@ export default defineTool({
       .select("id, title, category, date")
       .single();
 
-    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (error) return toolError("create-blog-post", error);
     return {
       content: [{ type: "text", text: `Published "${data.title}" at /blog/${data.id}` }],
       structuredContent: { post: data },

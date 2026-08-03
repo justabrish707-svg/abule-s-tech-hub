@@ -1,6 +1,7 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 import { supabaseForUser } from "../supabase";
+import { toolError } from "../errors";
 
 export default defineTool({
   name: "post_comment",
@@ -22,7 +23,7 @@ export default defineTool({
       .select("id, post_id, created_at")
       .single();
 
-    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (error) return toolError("post-comment", error);
     return {
       content: [{ type: "text", text: `Comment posted on ${data.post_id}.` }],
       structuredContent: { comment: data },

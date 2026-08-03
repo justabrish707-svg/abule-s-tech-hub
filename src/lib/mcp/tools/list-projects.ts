@@ -1,6 +1,7 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 import { supabaseForUser } from "../supabase";
+import { toolError } from "../errors";
 
 export default defineTool({
   name: "list_projects",
@@ -24,7 +25,7 @@ export default defineTool({
     if (status) query = query.eq("status", status);
 
     const { data, error } = await query;
-    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (error) return toolError("list-projects", error);
 
     return {
       content: [{ type: "text", text: JSON.stringify(data ?? []) }],

@@ -58,6 +58,15 @@ function supabaseForUser(ctx) {
   });
 }
 
+// src/lib/mcp/errors.ts
+var toolError = (scope, error) => {
+  console.error(`[mcp:${scope}]`, error);
+  return {
+    content: [{ type: "text", text: "Could not complete request." }],
+    isError: true
+  };
+};
+
 // src/lib/mcp/tools/list-blog-posts.ts
 var list_blog_posts_default = defineTool({
   name: "list_blog_posts",
@@ -77,7 +86,7 @@ var list_blog_posts_default = defineTool({
     if (category) query = query.eq("category", category);
     if (search) query = query.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%`);
     const { data, error } = await query;
-    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (error) return toolError("list-blog-posts", error);
     return {
       content: [{ type: "text", text: JSON.stringify(data ?? []) }],
       structuredContent: { posts: data ?? [] }
@@ -99,7 +108,7 @@ var get_blog_post_default = defineTool2({
       return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
     }
     const { data, error } = await supabaseForUser(ctx).from("blog_posts").select("id, title, excerpt, content, category, read_time, date, cover_image").eq("id", id).maybeSingle();
-    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (error) return toolError("get-blog-post", error);
     if (!data) return { content: [{ type: "text", text: `No blog post found with id "${id}".` }], isError: true };
     return {
       content: [{ type: "text", text: JSON.stringify(data) }],
@@ -130,7 +139,7 @@ var create_blog_post_default = defineTool3({
       return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
     }
     const { data, error } = await supabaseForUser(ctx).from("blog_posts").insert({ ...input, author_id: ctx.getUserId() }).select("id, title, category, date").single();
-    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (error) return toolError("create-blog-post", error);
     return {
       content: [{ type: "text", text: `Published "${data.title}" at /blog/${data.id}` }],
       structuredContent: { post: data }
@@ -157,7 +166,7 @@ var list_projects_default = defineTool4({
     let query = supabaseForUser(ctx).from("projects").select("id, title, description, status, tech, github, demo, display_order").order("display_order", { ascending: true }).limit(limit ?? 20);
     if (status) query = query.eq("status", status);
     const { data, error } = await query;
-    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (error) return toolError("list-projects", error);
     return {
       content: [{ type: "text", text: JSON.stringify(data ?? []) }],
       structuredContent: { projects: data ?? [] }
@@ -183,7 +192,7 @@ var post_comment_default = defineTool5({
       return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
     }
     const { data, error } = await supabaseForUser(ctx).from("comments").insert({ post_id, content, parent_id: parent_id ?? null, user_id: ctx.getUserId() }).select("id, post_id, created_at").single();
-    if (error) return { content: [{ type: "text", text: error.message }], isError: true };
+    if (error) return toolError("post-comment", error);
     return {
       content: [{ type: "text", text: `Comment posted on ${data.post_id}.` }],
       structuredContent: { comment: data }

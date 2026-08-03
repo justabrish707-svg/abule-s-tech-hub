@@ -240,13 +240,21 @@ const SecurityAudit = () => {
   };
 
   const exportPdf = () => {
+    // Notes and audit messages are user-supplied; escape before HTML interpolation.
+    const esc = (v: unknown) =>
+      String(v ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
     const ts = new Date().toLocaleString();
     const trailFor = (id: string) => trail.filter((e) => e.findingId === id);
     const sections = (Object.keys(grouped) as Severity[])
-      .map((sev) => `<h2>${sev.toUpperCase()} · ${grouped[sev].length}</h2>` + grouped[sev]
-        .map((f) => `<div class="f"><div class="row"><span class="sev ${f.severity}">${f.severity}</span><span class="src">${f.source}</span><span class="st ${f.status}">${f.status}</span></div><h3>${f.title}</h3>${f.location ? `<code>${f.location}</code>` : ""}<p>${f.note}</p>${
+      .map((sev) => `<h2>${esc(sev.toUpperCase())} · ${grouped[sev].length}</h2>` + grouped[sev]
+        .map((f) => `<div class="f"><div class="row"><span class="sev ${esc(f.severity)}">${esc(f.severity)}</span><span class="src">${esc(f.source)}</span><span class="st ${esc(f.status)}">${esc(f.status)}</span></div><h3>${esc(f.title)}</h3>${f.location ? `<code>${esc(f.location)}</code>` : ""}<p>${esc(f.note)}</p>${
             trailFor(f.id).length
-              ? `<ul class="trail">${trailFor(f.id).map((e) => `<li><b>${e.action}</b> · ${new Date(e.ts).toLocaleString()}${e.author ? ` · ${e.author}` : ""} — ${e.message}</li>`).join("")}</ul>`
+              ? `<ul class="trail">${trailFor(f.id).map((e) => `<li><b>${esc(e.action)}</b> · ${new Date(e.ts).toLocaleString()}${e.author ? ` · ${esc(e.author)}` : ""} — ${esc(e.message)}</li>`).join("")}</ul>`
               : ""
           }</div>`).join("")).join("");
     const html = `<!doctype html><html><head><meta charset="utf-8"><title>Security report ${ts}</title><style>body{font:14px/1.5 -apple-system,system-ui,sans-serif;color:#111;padding:32px;max-width:900px;margin:auto}h1{margin:0 0 4px}h2{margin-top:32px;border-bottom:1px solid #ddd;padding-bottom:4px}.meta{color:#666;margin-bottom:24px}.f{border:1px solid #e5e5e5;border-radius:8px;padding:12px 16px;margin:8px 0}.row{display:flex;gap:8px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}.sev,.st{padding:2px 8px;border-radius:4px;font-weight:700}.sev.critical{background:#fee;color:#a00}.sev.high{background:#fed7aa;color:#9a3412}.sev.medium{background:#fef3c7;color:#854d0e}.sev.low{background:#dbeafe;color:#1e40af}.sev.info{background:#eee;color:#444}.st.fixed{background:#d1fae5;color:#065f46}.st.open{background:#ffedd5;color:#9a3412}.st.accepted{background:#eee;color:#444}.src{color:#666}h3{margin:6px 0 4px;font-size:15px}code{font-size:12px;color:#555}.trail{font-size:12px;color:#444;margin:6px 0 0;padding-left:18px}@media print{body{padding:0}}</style></head><body><h1>Security findings report</h1><p class="meta">Exported ${ts} · ${summary.total} findings (${summary.fixed} fixed, ${summary.open} open, ${summary.accepted} accepted)</p>${sections}<script>window.onload=()=>window.print()</script></body></html>`;

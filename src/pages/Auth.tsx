@@ -104,7 +104,7 @@ const Auth = () => {
         password: parsed.data.password,
         options: {
           data: { username: parsed.data.username },
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: postAuthUrl,
         },
       });
       if (error) {

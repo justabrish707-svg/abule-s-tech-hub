@@ -367,7 +367,7 @@ const Auth = () => {
               onClick={async () => {
                 setLoading(true);
                 const result = await lovable.auth.signInWithOAuth("google", {
-                  redirect_uri: window.location.origin,
+                  redirect_uri: postAuthUrl,
                 });
                 if (result.error) {
                   toast.error("Google sign-in failed. Please try again.");
@@ -376,7 +376,7 @@ const Auth = () => {
                 }
                 if (result.redirected) return;
                 toast.success("Welcome!");
-                navigate("/");
+                navigate(nextPath ?? "/");
                 setLoading(false);
               }}
               disabled={loading}

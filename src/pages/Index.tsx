@@ -97,7 +97,7 @@ const Index = () => {
                 Open to opportunities
               </div>
 
-              <h1 className="text-[2.5rem] leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 sm:mb-5 opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
+              <h1 className="text-[2rem] leading-[1.1] sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 sm:mb-5 opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
                 Hi, I'm{" "}
                 <span className="relative inline-block">
                   <span className="text-gradient">Abraham Admasu</span>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
@@ -48,6 +48,12 @@ const Auth = () => {
   const [mounted, setMounted] = useState(false);
   const [forgotMode, setForgotMode] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Preserve an OAuth consent (or other) return path across every sign-in method.
+  const rawNext = searchParams.get("next");
+  const nextPath = rawNext && /^\/(?!\/)/.test(rawNext) ? rawNext : null;
+  const postAuthUrl = nextPath ? `${window.location.origin}${nextPath}` : window.location.origin;
 
   useEffect(() => {
     setMounted(true);
@@ -84,7 +90,7 @@ const Auth = () => {
         toast.error("Invalid email or password.");
       } else {
         toast.success("Welcome back!");
-        navigate("/");
+        navigate(nextPath ?? "/");
       }
     } else {
       const parsed = signupSchema.safeParse({ email, password, username });
@@ -98,7 +104,7 @@ const Auth = () => {
         password: parsed.data.password,
         options: {
           data: { username: parsed.data.username },
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: postAuthUrl,
         },
       });
       if (error) {
@@ -361,7 +367,7 @@ const Auth = () => {
               onClick={async () => {
                 setLoading(true);
                 const result = await lovable.auth.signInWithOAuth("google", {
-                  redirect_uri: window.location.origin,
+                  redirect_uri: postAuthUrl,
                 });
                 if (result.error) {
                   toast.error("Google sign-in failed. Please try again.");
@@ -370,7 +376,7 @@ const Auth = () => {
                 }
                 if (result.redirected) return;
                 toast.success("Welcome!");
-                navigate("/");
+                navigate(nextPath ?? "/");
                 setLoading(false);
               }}
               disabled={loading}

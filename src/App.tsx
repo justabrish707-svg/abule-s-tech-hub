@@ -25,6 +25,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const SeoAudit = lazy(() => import("./pages/SeoAudit"));
 const SecurityAudit = lazy(() => import("./pages/SecurityAudit"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ const App = () => (
               <Route path="/admin/seo" element={<SeoAudit />} />
               <Route path="/admin/security" element={<SecurityAudit />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

@@ -26,6 +26,7 @@ const SeoAudit = lazy(() => import("./pages/SeoAudit"));
 const SecurityAudit = lazy(() => import("./pages/SecurityAudit"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
+const CodeReview = lazy(() => import("./pages/CodeReview"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
               <Route path="/projects" element={<Projects />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/tools/code-review" element={<CodeReview />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/admin" element={<Admin />} />

@@ -1,0 +1,32 @@
+name: Build and smoke test
+
+# Runs on every push/PR (including Dependabot upgrades) to confirm the site
+# still builds and its key pages load.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - name: Unit tests
+        run: bun run test
+      - name: Production build
+        run: bun run build
+      - name: Install Playwright browser
+        run: bunx playwright install --with-deps chromium
+      - name: Serve build
+        run: |
+          bunx vite preview --port 8080 --strictPort &
+          npx --yes wait-on http://localhost:8080 --timeout 60000
+      - name: Smoke test key pages
+        env:
+          PLAYWRIGHT_BASE_URL: http://localhost:8080
+        run: bunx playwright test tests/smoke.spec.ts --project=chromium

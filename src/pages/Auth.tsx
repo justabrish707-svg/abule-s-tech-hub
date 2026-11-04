@@ -3,9 +3,12 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
-import { Mail, Lock, User, LogIn, UserPlus, Terminal, Eye, EyeOff, Sparkles, Code2, Zap } from "lucide-react";
+import { Mail, Lock, User, LogIn, UserPlus, Eye, EyeOff, Sparkles, Code2, Zap } from "lucide-react";
 import { authSchema, signupSchema } from "@/lib/validation";
 import SEO from "@/components/SEO";
+import { useResolvedTheme } from "@/hooks/useTheme";
+import logoDark from "@/assets/abule_tech_logo_dark_text.png";
+import logoWhite from "@/assets/abule_tech_logo_white_text.png";
 
 const FloatingParticle = ({ delay, size, x, y, duration }: { delay: number; size: number; x: number; y: number; duration: number }) => (
   <div
@@ -49,6 +52,7 @@ const Auth = () => {
   const [forgotMode, setForgotMode] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const theme = useResolvedTheme();
 
   // Preserve an OAuth consent (or other) return path across every sign-in method.
   const rawNext = searchParams.get("next");
@@ -137,11 +141,14 @@ const Auth = () => {
       {/* Left panel — branding (hidden on mobile) */}
       <div className="hidden lg:flex flex-col justify-center w-1/2 px-16 relative">
         <div className={`transition-all duration-700 ${mounted ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"}`}>
-          <div className="inline-flex items-center gap-3 mb-8">
-            <div className="h-12 w-12 rounded-2xl bg-primary/10 glow-border flex items-center justify-center">
-              <Terminal className="h-6 w-6 text-primary" />
-            </div>
-            <span className="text-2xl font-bold text-gradient">Abule Tech</span>
+          <div className="mb-8">
+            <img
+              src={theme === "dark" ? logoWhite : logoDark}
+              alt="Abule Tech"
+              width={482}
+              height={200}
+              className="h-12 w-auto"
+            />
           </div>
 
           <h2 className="text-4xl font-extrabold tracking-tight mb-4 leading-tight">
@@ -193,9 +200,13 @@ const Auth = () => {
         >
           {/* Mobile branding */}
           <div className="lg:hidden text-center mb-8">
-            <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-primary/10 glow-border mb-4">
-              <Terminal className="h-7 w-7 text-primary" />
-            </div>
+            <img
+              src={theme === "dark" ? logoWhite : logoDark}
+              alt="Abule Tech"
+              width={482}
+              height={200}
+              className="h-12 w-auto mx-auto mb-4"
+            />
             <h1 className="text-2xl font-bold mb-1">
               {isLogin ? "Welcome back" : "Join Abule Tech"}
             </h1>

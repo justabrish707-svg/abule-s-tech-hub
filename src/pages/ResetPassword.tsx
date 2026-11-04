@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Lock, Eye, EyeOff, Terminal, CheckCircle } from "lucide-react";
+import { Lock, Eye, EyeOff, CheckCircle } from "lucide-react";
 import SEO from "@/components/SEO";
+import { useResolvedTheme } from "@/hooks/useTheme";
+import logoDark from "@/assets/abule_tech_logo_dark_text.png";
+import logoWhite from "@/assets/abule_tech_logo_white_text.png";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -13,6 +16,7 @@ const ResetPassword = () => {
   const [success, setSuccess] = useState(false);
   const [isRecovery, setIsRecovery] = useState(false);
   const navigate = useNavigate();
+  const theme = useResolvedTheme();
 
   useEffect(() => {
     // Check for recovery token in URL hash
@@ -93,9 +97,13 @@ const ResetPassword = () => {
 
       <div className="w-full max-w-md px-4 relative">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-primary/10 glow-border mb-4">
-            <Terminal className="h-7 w-7 text-primary" />
-          </div>
+          <img
+            src={theme === "dark" ? logoWhite : logoDark}
+            alt="Abule Tech"
+            width={482}
+            height={200}
+            className="h-11 w-auto mx-auto mb-4"
+          />
           <h1 className="text-2xl font-bold mb-1">Set New Password</h1>
           <p className="text-sm text-muted-foreground">Choose a strong password for your account</p>
         </div>

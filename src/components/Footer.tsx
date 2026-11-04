@@ -1,6 +1,9 @@
-import { Terminal, Send, Phone, Mail } from "lucide-react";
+import { Send, Phone, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import NewsletterSignup from "./NewsletterSignup";
+import { useResolvedTheme } from "@/hooks/useTheme";
+import logoDark from "@/assets/abule_tech_logo_dark_text.png";
+import logoWhite from "@/assets/abule_tech_logo_white_text.png";
 
 const socials = [
   { icon: Send, href: "https://t.me/abule_48", label: "Telegram" },
@@ -8,16 +11,22 @@ const socials = [
   { icon: Mail, href: "mailto:abuleman1221@gmail.com", label: "Email" },
 ];
 
-const Footer = () => (
+const Footer = () => {
+  const theme = useResolvedTheme();
+
+  return (
   <footer className="border-t border-border/30 bg-card/30">
     <div className="container py-16">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
         <div className="md:col-span-2">
-          <Link to="/" className="inline-flex items-center gap-2 mb-4">
-            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Terminal className="h-4 w-4 text-primary" />
-            </div>
-            <span className="text-lg font-bold">abule<span className="text-gradient">.tech</span></span>
+          <Link to="/" className="inline-block mb-4" aria-label="Abule Tech — home">
+            <img
+              src={theme === "dark" ? logoWhite : logoDark}
+              alt="Abule Tech"
+              width={482}
+              height={200}
+              className="h-8 w-auto"
+            />
           </Link>
           <p className="text-sm text-muted-foreground max-w-sm mb-6 leading-relaxed">
             Code. Create. Learn. Repeat. Sharing my journey through computer science, web development, and cybersecurity.
@@ -76,6 +85,7 @@ const Footer = () => (
       </div>
     </div>
   </footer>
-);
+  );
+};
 
 export default Footer;

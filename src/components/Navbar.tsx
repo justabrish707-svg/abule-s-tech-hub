@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Terminal, LogIn, LogOut, UserCircle, Settings } from "lucide-react";
+import { Menu, X, LogIn, LogOut, UserCircle, Settings } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import ThemeToggle from "@/components/ThemeToggle";
+import { useResolvedTheme } from "@/hooks/useTheme";
+import logoDark from "@/assets/abule_tech_logo_dark_text.png";
+import logoWhite from "@/assets/abule_tech_logo_white_text.png";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -18,6 +21,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, profile, signOut } = useAuth();
+  const theme = useResolvedTheme();
 
   const handleSignOut = async () => {
     await signOut();
@@ -27,13 +31,14 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/30 glass">
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
-            <Terminal className="h-4 w-4 text-primary transition-transform duration-200 group-hover:rotate-6" />
-          </div>
-          <span className="text-lg font-bold tracking-tight">
-            abule<span className="text-gradient">.tech</span>
-          </span>
+        <Link to="/" className="group" aria-label="Abule Tech — home">
+          <img
+            src={theme === "dark" ? logoWhite : logoDark}
+            alt="Abule Tech"
+            width={482}
+            height={200}
+            className="h-7 w-auto transition-transform duration-200 group-hover:scale-[1.04]"
+          />
         </Link>
 
         {/* Desktop */}

@@ -9,7 +9,7 @@ import NewsletterSignup from "@/components/NewsletterSignup";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { useProjects } from "@/hooks/useProjects";
 const heroBg = "/hero-bg.webp";
-import abulePortrait from "@/assets/abule-portrait.webp.asset.json";
+import abulePortrait from "@/assets/abule-portrait.webp";
 
 const skills = [
   { icon: Globe, label: "Web Development", desc: "HTML, CSS, JavaScript, React", gradient: "from-blue-500/20 to-cyan-500/20" },
@@ -90,8 +90,8 @@ const Index = () => {
         <div className="pointer-events-none absolute bottom-0 right-10 h-96 w-96 rounded-full bg-primary-glow/10 blur-3xl animate-[float_11s_ease-in-out_infinite]" />
 
         <div className="container py-16 sm:py-20 relative">
-          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 sm:gap-12 items-center">
-            <div className="max-w-3xl text-center lg:text-left">
+          <div className="grid md:grid-cols-[1.15fr_1fr] gap-8 sm:gap-10 lg:gap-12 items-center">
+            <div className="max-w-3xl text-center md:text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-xs font-medium text-primary mb-5 sm:mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "100ms" }}>
                 <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                 Open to opportunities
@@ -101,11 +101,13 @@ const Index = () => {
                 <span className="block font-mono text-sm sm:text-base font-medium text-primary mb-2 sm:mb-3">
                   Hi, I'm
                 </span>
-                <span className="relative inline-block font-extrabold tracking-tight leading-[1.05] text-[clamp(2.25rem,7vw+0.5rem,4.5rem)]">
-                  <span className="text-gradient">Abraham Admasu</span>
+                <span className="relative inline-block font-extrabold tracking-tight leading-[1.05] text-balance text-[clamp(2.1rem,6vw,4rem)]">
+                  <span className="text-gradient whitespace-nowrap">Abraham Admasu</span>
                   <span aria-hidden className="pointer-events-none absolute -bottom-1 left-0 h-[3px] w-1/2 bg-gradient-to-r from-primary to-transparent rounded-full" />
                 </span>
-                <span className="block mt-3 sm:mt-4 font-semibold tracking-tight text-foreground/85 leading-snug text-[clamp(1.05rem,1.6vw+0.6rem,1.75rem)]">
+                <span className="block mt-3 sm:mt-4 font-semibold tracking-tight text-foreground/85 leading-snug text-balance text-[clamp(1.05rem,1.6vw+0.6rem,1.75rem)]">
+                  <span className="text-primary">CS Student</span>
+                  <span aria-hidden className="mx-2 text-muted-foreground/50">·</span>
                   Developer <span className="text-primary">&amp;</span> Cybersecurity Enthusiast
                 </span>
               </h1>
@@ -114,12 +116,12 @@ const Index = () => {
                 <TypingEffect typingSpeed={70} deletingSpeed={32} pauseDuration={2000} cursorStyle="bar" />
               </div>
 
-              <p className="text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-7 sm:mb-8 text-sm sm:text-base leading-relaxed opacity-0 animate-fade-up" style={{ animationDelay: "500ms" }}>
+              <p className="text-muted-foreground max-w-xl mx-auto md:mx-0 mb-7 sm:mb-8 text-sm sm:text-base leading-relaxed opacity-0 animate-fade-up" style={{ animationDelay: "500ms" }}>
                 Computer science student sharing my journey in tech, coding, and cybersecurity.
                 I believe in learning by building and teaching what I learn.
               </p>
 
-              <div className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-3 opacity-0 animate-fade-up" style={{ animationDelay: "650ms" }}>
+              <div className="flex flex-col sm:flex-row flex-wrap justify-center md:justify-start gap-3 opacity-0 animate-fade-up" style={{ animationDelay: "650ms" }}>
                 <Link to="/blog" className="focus-ring group inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 active:scale-[0.97]">
                   <BookOpen className="h-4 w-4" /> Read Blog <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
@@ -133,7 +135,7 @@ const Index = () => {
               </div>
 
               {/* Social links */}
-              <div className="flex items-center justify-center lg:justify-start gap-2 mt-6 opacity-0 animate-fade-up" style={{ animationDelay: "750ms" }}>
+              <div className="flex items-center justify-center md:justify-start gap-2 mt-6 opacity-0 animate-fade-up" style={{ animationDelay: "750ms" }}>
                 {socials.map(({ icon: Icon, href, label }) => (
                   <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="focus-ring h-10 w-10 rounded-xl bg-secondary/80 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 hover:-translate-y-0.5 transition-all active:scale-95" aria-label={label}>
                     <Icon className="h-4 w-4" />
@@ -143,12 +145,12 @@ const Index = () => {
             </div>
 
             {/* Portrait */}
-            <div className="relative opacity-0 animate-fade-up order-first lg:order-none mx-auto lg:mx-0 max-w-[240px] sm:max-w-xs lg:max-w-md w-full" style={{ animationDelay: "400ms" }}>
+            <div className="relative opacity-0 animate-fade-up order-first md:order-none mx-auto md:mx-0 max-w-[240px] sm:max-w-xs md:max-w-[200px] lg:max-w-md w-full" style={{ animationDelay: "400ms" }}>
               <div className="relative aspect-[4/5] mx-auto group">
                 <div className="absolute -inset-6 rounded-[2.25rem] bg-gradient-to-br from-primary/40 via-primary/10 to-transparent blur-3xl animate-[pulse-glow_4s_ease-in-out_infinite]" />
                 <div className="absolute -inset-1 rounded-[1.75rem] bg-gradient-to-br from-primary/50 via-primary-glow/30 to-transparent" />
                 <div className="relative h-full w-full rounded-[1.5rem] overflow-hidden border border-primary/20 glow-border transition-transform duration-700 group-hover:scale-[1.02]">
-                  <img src={abulePortrait.url} alt="Abraham Admasu portrait — founder of Abule Tech" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img src={abulePortrait} alt="Abraham Admasu portrait — founder of Abule Tech" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
                   {/* Subtle scanline shimmer */}
                   <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(110deg,transparent_40%,hsl(var(--primary)/0.12)_50%,transparent_60%)] bg-[length:250%_100%] animate-[shimmer_4s_linear_infinite]" />

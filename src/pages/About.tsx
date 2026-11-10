@@ -2,7 +2,7 @@ import { GraduationCap, Target, Code2, Shield, Globe, MapPin, Calendar, Coffee, 
 import ScrollReveal from "@/components/ScrollReveal";
 import SEO from "@/components/SEO";
 import aboutBg from "@/assets/about-bg.jpg";
-import abulePortrait from "@/assets/abule-portrait.webp.asset.json";
+import abulePortrait from "@/assets/abule-portrait.webp";
 
 const socials = [
   { icon: Send, href: "https://t.me/abule_48", label: "Telegram" },
@@ -54,7 +54,7 @@ const About = () => (
             <div className="relative w-48 h-48 sm:w-56 sm:h-56 shrink-0">
               <div className="absolute -inset-3 rounded-full bg-gradient-to-br from-primary/40 via-primary/10 to-transparent blur-2xl" />
               <div className="relative h-full w-full rounded-full overflow-hidden border-2 border-primary/30 glow-border">
-                <img src={abulePortrait.url} alt="Abraham Admasu portrait" className="h-full w-full object-cover" />
+                <img src={abulePortrait} alt="Abraham Admasu portrait" className="h-full w-full object-cover" />
               </div>
             </div>
           </ScrollReveal>

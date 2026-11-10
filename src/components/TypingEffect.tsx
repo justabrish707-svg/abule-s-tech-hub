@@ -15,6 +15,7 @@ interface TypingEffectProps {
 
 const defaultPhrases = [
   "Code. Create. Learn. Repeat.",
+  "Studying Computer Science.",
   "Exploring Cybersecurity.",
   "Building with JavaScript.",
   "Learning C++ & Algorithms.",

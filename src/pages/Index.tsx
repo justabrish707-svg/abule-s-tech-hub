@@ -97,17 +97,20 @@ const Index = () => {
                 Open to opportunities
               </div>
 
-              <h1 className="text-[2rem] leading-[1.1] sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 sm:mb-5 opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
-                Hi, I'm{" "}
-                <span className="relative inline-block">
-                  <span className="text-gradient">Abraham Admasu</span>
-                  <span aria-hidden className="pointer-events-none absolute -bottom-1.5 left-0 right-0 h-[6px] bg-gradient-to-r from-primary/70 via-primary-glow/40 to-transparent blur-[3px] rounded-full" />
-                  <span aria-hidden className="pointer-events-none absolute -bottom-1 left-0 h-[2px] w-2/3 bg-gradient-to-r from-primary to-transparent rounded-full" />
+              <h1 className="mb-4 sm:mb-5 opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
+                <span className="block font-mono text-sm sm:text-base font-medium text-primary mb-2 sm:mb-3">
+                  Hi, I'm
                 </span>
-                {" "}— Developer &amp; Cybersecurity Enthusiast
+                <span className="relative inline-block font-extrabold tracking-tight leading-[1.05] text-[clamp(2.25rem,7vw+0.5rem,4.5rem)]">
+                  <span className="text-gradient">Abraham Admasu</span>
+                  <span aria-hidden className="pointer-events-none absolute -bottom-1 left-0 h-[3px] w-1/2 bg-gradient-to-r from-primary to-transparent rounded-full" />
+                </span>
+                <span className="block mt-3 sm:mt-4 font-semibold tracking-tight text-foreground/85 leading-snug text-[clamp(1.05rem,1.6vw+0.6rem,1.75rem)]">
+                  Developer <span className="text-primary">&amp;</span> Cybersecurity Enthusiast
+                </span>
               </h1>
 
-              <div className="text-xl sm:text-2xl md:text-3xl font-semibold text-muted-foreground min-h-[2.25rem] sm:min-h-[2.5rem] mb-5 sm:mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "350ms" }}>
+              <div className="text-base sm:text-lg md:text-xl font-mono font-medium text-muted-foreground min-h-[1.75rem] sm:min-h-[2rem] mb-5 sm:mb-6 opacity-0 animate-fade-up" style={{ animationDelay: "350ms" }}>
                 <TypingEffect typingSpeed={70} deletingSpeed={32} pauseDuration={2000} cursorStyle="bar" />
               </div>
 
